@@ -1,35 +1,21 @@
 import express, { Request, Response } from 'express';
+import {
+  getCars,
+  createCar,
+  updateCar,
+  getCar,
+  deleteCar,
+} from '../controller/controllerCar';
 
 const routerCar = express.Router();
 
 routerCar
-  // Rota para pegar todos os carros e se for passado uma query, filtra por query
-  .get('/car', (_req: Request, res: Response) => {
-    res.json({
-      message: 'Rota para pegar todos os carros ou filtrar por query',
-    });
-  })
-  // Rota para criar um registro de carro
-  .post('/car', (_req: Request, res: Response) => {
-    res.json({ message: 'Rota para criar um registro de carro' });
-  })
-  // Rota para atualizar um carro utilizando query
-  .put('/car', (_req: Request, res: Response) => {
-    res.json({ message: 'Rota para atualizar um carro utilizando query' });
-  });
-// TODO: Verificar com os instrutores
-/* .patch('/', (_req: Request, res: Response) => {
-    res.json({ message: 'OK' });
-}) */
+  .route('/car')
+  .get(getCars) // Rota para obter todos os carros (Aceita filtro por query) - TODO:Em Desenvolvimento
+  .post(createCar) // Rota para criar um carro - TODO:Em Desenvolvimento
+  .put(updateCar); // Rota para atualizar um carro - TODO:Em Desenvolvimento
+/* .patch(controllerCar) */ // Verficar com os instrutores essa funcionalidade
 
-routerCar
-  // Rota para listar carro por ID
-  .get('/car/:id', (_req: Request, res: Response) => {
-    res.json({ message: 'Rota para listar carro por ID' });
-  })
-  // Rota para remover um carro por ID
-  .delete('/car/:id', (_req: Request, res: Response) => {
-    res.json({ message: 'Rota para remover carro por ID' });
-  });
+routerCar.route('/car/:id').get(getCar).delete(deleteCar); // Rotas para obter um carro por ID e para deletar um carro - TODO:Em Desenvolvimento
 
 export default routerCar;

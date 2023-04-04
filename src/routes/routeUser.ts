@@ -1,15 +1,9 @@
 import express, { Request, Response } from 'express';
+import { createUser, loginUser } from '../controller/controllerUser';
 
 const routerUser = express.Router();
 
-routerUser
-  // Rota para cadastrar um usuário
-  .post('/user', (_req: Request, res: Response) => {
-    res.json({ message: 'Rota para criar um usuário' });
-  })
-  // Rota para logar com as credenciais do usuário
-  .post('/user/authenticate', (_req: Request, res: Response) => {
-    res.json({ message: 'Rota para logar com as credenciais do usuário' });
-  });
+routerUser.route('/user').post(createUser); // Rota para cadastrar um novo usuário - TODO:Em Desenvolvimento
+routerUser.route('/user/authenticate').post(loginUser); // Rota para logar com as credenciais do usuário - TODO:Em Desenvolvimento
 
 export default routerUser;
