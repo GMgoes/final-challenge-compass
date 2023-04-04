@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 import * as dotenv from 'dotenv';
 import routeCar from './routes/routeCar';
 import routerUser from './routes/routeUser';
+import routerReservation from './routes/routeReservations';
 dotenv.config();
 
 const app = express();
@@ -10,6 +11,7 @@ const app = express();
 app.use(express.json());
 app.use('/api/v1', routeCar);
 app.use('/api/v1', routerUser);
+app.use('/api/v1', routerReservation);
 
 // Informando ao ESLINT que process.env.PORT não vai ser nulo
 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
