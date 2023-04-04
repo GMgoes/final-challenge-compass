@@ -1,20 +1,20 @@
-import express, { Router, Request, Response } from 'express';
+import express, { Request, Response } from 'express';
 
 const routerCar = express.Router();
 
 routerCar
   // Rota para pegar todos os carros e se for passado uma query, filtra por query
-  .get('/', (_req: Request, res: Response) => {
+  .get('/car', (_req: Request, res: Response) => {
     res.json({
       message: 'Rota para pegar todos os carros ou filtrar por query',
     });
   })
-  // Rota pra criar um registro de carro
-  .post('/', (_req: Request, res: Response) => {
+  // Rota para criar um registro de carro
+  .post('/car', (_req: Request, res: Response) => {
     res.json({ message: 'Rota para criar um registro de carro' });
   })
   // Rota para atualizar um carro utilizando query
-  .put('/', (_req: Request, res: Response) => {
+  .put('/car', (_req: Request, res: Response) => {
     res.json({ message: 'Rota para atualizar um carro utilizando query' });
   });
 // TODO: Verificar com os instrutores
@@ -24,11 +24,11 @@ routerCar
 
 routerCar
   // Rota para listar carro por ID
-  .get('/:id', (_req: Request, res: Response) => {
+  .get('/car/:id', (_req: Request, res: Response) => {
     res.json({ message: 'Rota para listar carro por ID' });
   })
   // Rota para remover um carro por ID
-  .delete('/:id', (_req: Request, res: Response) => {
+  .delete('/car/:id', (_req: Request, res: Response) => {
     res.json({ message: 'Rota para remover carro por ID' });
   });
 
