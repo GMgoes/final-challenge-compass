@@ -23,6 +23,7 @@ const getCars = async (_: Request, res: Response) => {
 
 // TODO: - Necessário melhoria e sanitização - JEST
 const createCar = async (req: Request, res: Response) => {
+  console.log(Date.parse(req.body.birth));
   // É verificado a quantidade de propriedades passadas por parâmetro
   if (Object.keys(req.body).length < Object.keys(Car.schema.obj).length) {
     try {
