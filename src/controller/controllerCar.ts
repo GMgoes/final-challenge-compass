@@ -27,7 +27,7 @@ const getCars = async (req: Request, res: Response) => {
   }
 };
 
-// TODO: - JEST - OK
+// TODO: - JEST - Verify repeated acessories
 const createCar = async (req: Request, res: Response) => {
   /* É verificado a quantidade de propriedades passadas no body
     se o ano de fabricação é válido e se o número de acessórios é maior do que 0. */
@@ -68,7 +68,7 @@ const createCar = async (req: Request, res: Response) => {
   }
 };
 
-// TODO: - JEST - OK
+// TODO: - JEST - OK - Verify "The same rules as for registering a car apply here"
 const updateCar = async (req: Request, res: Response) => {
   // Verifica se foi passado um ID válido
   if (isValidObjectId(req.params.id)) {
@@ -84,11 +84,18 @@ const updateCar = async (req: Request, res: Response) => {
           number_of_passengers: req.body.number_of_passengers,
         }
       );
-      res.status(200).json({
-        message: 'Atualizado dados do carro',
-        status: res.status,
-        car,
-      });
+      if (car == null) {
+        res.status(404).json({
+          message: 'Erro, não foi encontrado nenhum carro com esse ID',
+          status: res.status,
+        });
+      } else {
+        res.status(200).json({
+          message: 'Atualizado dados do carro',
+          status: res.status,
+          car,
+        });
+      }
     } catch (err) {
       res.status(400).json({
         message: 'Erro ao atualizar dados do carro',
@@ -131,7 +138,7 @@ const getCar = async (req: Request, res: Response) => {
       });
     }
   } else {
-    res.status(400).json({
+    res.status(404).json({
       message: 'ID inválido, tente novamente com um ID válido',
       status: res.status,
     });
@@ -146,16 +153,12 @@ const deleteCar = async (req: Request, res: Response) => {
       const deletedCar = await Car.findByIdAndDelete(req.params.id);
 
       if (deletedCar == null) {
-        res.status(400).json({
+        res.status(404).json({
           message: 'Erro, não foi encontrado nenhum carro com esse ID',
           status: res.status,
         });
       } else {
-        res.status(200).json({
-          message: 'Carro deletado com sucesso',
-          status: res.status,
-          deletedCar,
-        });
+        res.status(204).json({});
       }
     } catch (err) {
       res.status(400).json({

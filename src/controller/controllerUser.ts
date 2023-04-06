@@ -3,6 +3,7 @@ import User from '../models/User';
 import { obtainCEP, verifyCPF, verifyDate } from '../utils/utils';
 import bcrypt from 'bcrypt';
 
+// TODO: - JEST - Need a valid Email - Need to check
 const createUser = async (req: Request, res: Response) => {
   // URL Base para consulta ViaCEP
   const urlCEP = `http://viacep.com.br/ws/${req.body.cep}/json/`;
@@ -59,6 +60,7 @@ const createUser = async (req: Request, res: Response) => {
   }
 };
 
+// TODO: - JEST - Need to check
 const loginUser = async (req: Request, res: Response) => {
   if (!req.body.email || !req.body.password) {
     res.status(400).json({
