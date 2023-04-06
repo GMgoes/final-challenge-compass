@@ -4,21 +4,24 @@ const { Schema } = mongoose;
 const schema = new Schema({
   model: {
     type: String,
+    required: true,
   },
   color: {
     type: String,
+    required: true,
   },
   year: {
     type: String,
+    required: true,
   },
   value_per_day: {
     type: Number,
+    required: true,
   },
-  accessories: {
-    type: [{ type: String }],
-  },
+  accessories: [{}],
   number_of_passengers: {
     type: Number,
+    required: true,
   },
 });
 
