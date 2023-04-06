@@ -1,6 +1,6 @@
 import axios from 'axios';
 import mongoose from 'mongoose';
-
+import moment from 'moment';
 /* Função para verificar a idade da pessoa,
 retorna a diferença de idade da data de nascimento até agora */
 const verifyDate = function (datePassed: string) {
@@ -74,5 +74,26 @@ function isValidObjectId(id: string) {
   }
   return false;
 }
+// Função que verifica o preço total da reserva, com base nos dias passados por parâmetro e o preço da diária
+function calculateTotal(
+  dateFinal: string,
+  dateStart: string,
+  valueDay: number
+) {
+  // TODO: Why this doesn't works?
+  /* const startDate = Date.parse(dateStart);
+  const endDate = Date.parse(dateFinal);
+  const diferenceMs = endDate - startDate; 
+  const diferenceDays = Math.trunc(diferenceMs / (1000 * 60 * 60 * 24));*/
 
-export { verifyDate, obtainCEP, verifyCPF, isValidObjectId };
+  const diferenceMs = moment(dateFinal, 'DD/MM/YYYY').diff(
+    moment(dateStart, 'DD/MM/YYYY')
+  );
+  const days = moment.duration(diferenceMs).asDays();
+
+  const valueTotal = valueDay * days;
+
+  return valueTotal;
+}
+
+export { verifyDate, obtainCEP, verifyCPF, isValidObjectId, calculateTotal };
