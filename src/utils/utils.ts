@@ -1,5 +1,8 @@
 import axios from 'axios';
+import mongoose from 'mongoose';
 
+/* Função para verificar a idade da pessoa,
+retorna a diferença de idade da data de nascimento até agora */
 const verifyDate = function (datePassed: string) {
   const dateToVerify = Date.parse(datePassed);
 
@@ -10,14 +13,15 @@ const verifyDate = function (datePassed: string) {
 
   return diferenceYears;
 };
-
+/* Função para obter as informações de regiões segundo o CEP informado,
+ retorna o objeto repassado pelo ViaCEP */
 const obtainCEP = async function (urlCEP: string) {
   const responseObject = await axios.get(urlCEP).then((response) => {
     return response.data;
   });
   return responseObject;
 };
-
+// Função para verificar se um CPF é válido, retorna true ou false
 const verifyCPF = function (cpfToVerify: string) {
   if (
     formatCPF(cpfToVerify)[9] == verifyDigit(10, cpfToVerify) &&
@@ -29,6 +33,7 @@ const verifyCPF = function (cpfToVerify: string) {
     return false;
   }
 };
+// Função que retorna o CPF formatado (Sem pontos e virgulas até o momento)
 function formatCPF(cpf: string) {
   let format = cpf.replaceAll('-', ' ');
   format = format.replaceAll('.', ' ');
@@ -40,7 +45,7 @@ function formatCPF(cpf: string) {
   }
   return vectorCPF;
 }
-
+// Função que verifica dinamicamente os digitos calculaveis do CPF (10° e 11° dígito), retorna true ou false
 function verifyDigit(weight: number, cpfToVerify: string) {
   const vector = formatCPF(cpfToVerify);
   const length = weight - 1;
@@ -60,5 +65,14 @@ function verifyDigit(weight: number, cpfToVerify: string) {
   }
   return digit;
 }
+// Função que valida se um ID repassado (String) é um ObjectID segundo as definições do MongoDB
+function isValidObjectId(id: string) {
+  const ObjectId = mongoose.Types.ObjectId;
+  if (ObjectId.isValid(id)) {
+    if (String(new ObjectId(id)) === id) return true;
+    return false;
+  }
+  return false;
+}
 
-export { verifyDate, obtainCEP, verifyCPF };
+export { verifyDate, obtainCEP, verifyCPF, isValidObjectId };

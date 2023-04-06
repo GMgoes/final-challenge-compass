@@ -1,59 +1,79 @@
 import { Request, Response } from 'express';
 import Car from '../models/Car';
+import { isValidObjectId } from '../utils/utils';
+// TODO: - JEST - Verify the query in accessories - Verify pagination
+const getCars = async (req: Request, res: Response) => {
+  /* Verificamos se estamos recebendo alguma query, se sim
+  vamos utilizá-la para busca, senão buscamos sem nenhum filtro (todos os registros) */
+  const property = Object.keys(req.query)[0];
+  const search = Object.keys(req.query)[0]
+    ? { [property]: req.query[property] }
+    : {};
 
-// TODO: - Necessário melhoria, sanitização e implementação da pesquisa por query (se for o caso) - JEST
-const getCars = async (_: Request, res: Response) => {
   try {
-    // Realizado consulta no banco de dados para obter os carros
-    const body = await Car.find({});
+    const cars = await Car.find(search);
 
     res.status(200).json({
-      // Respostas se tudo ocorrer bem durante a consulta
       message: 'Consulta efetuado com sucesso',
-      body,
+      status: res.status,
+      cars,
     });
   } catch (err) {
-    // Respostas se der algum erro na consulta do banco de dados
     res.status(400).json({
       message: 'Erro na consulta do banco de dados',
-      body: err,
+      status: res.status,
+      err,
     });
   }
 };
 
-// TODO: - Necessário melhoria e sanitização - JEST
+// TODO: - JEST - OK
 const createCar = async (req: Request, res: Response) => {
-  console.log(Date.parse(req.body.birth));
-  // É verificado a quantidade de propriedades passadas por parâmetro
-  if (Object.keys(req.body).length < Object.keys(Car.schema.obj).length) {
+  /* É verificado a quantidade de propriedades passadas no body
+    se o ano de fabricação é válido e se o número de acessórios é maior do que 0. */
+  if (
+    Object.keys(req.body).length >= 6 &&
+    parseInt(req.body.year) >= 1950 &&
+    parseInt(req.body.year) <= 2023 &&
+    req.body.accessories.length > 0
+  ) {
     try {
-      // Criado um documento do tipo Carro no BD
-      await Car.create(req.body);
-      // Respostas se tudo ocorrer bem durante a criação do registro
-      res.status(200).json({
-        message: 'Registro de carro criado',
-        body: req.body,
+      const createdCar = await Car.create({
+        model: req.body.model,
+        color: req.body.color,
+        year: req.body.year,
+        value_per_day: req.body.value_per_day,
+        accessories: req.body.accessories,
+        number_of_passengers: req.body.number_of_passengers,
       });
-    } catch (err) {
-      // Resposta se as propriedades não atenderem as propriedades exigidas do Schema
+      res.status(201).json({
+        message: 'Registro de carro criado',
+        status: res.status,
+        body: createdCar,
+      });
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (err: any) {
       res.status(400).json({
-        message: 'Propriedades incoerentes',
+        message: 'Erro ao cadastrar o novo carro',
+        status: res.status,
+        err,
       });
     }
   } else {
-    // Quantidade de parametros diferentes do adequado
+    /* Caso quantidade de propriedades passadas por parâmetro seja incoerente com o necessário
+    se o ano de fabricação é inválido e se o número de acessórios é igual à 0 */
     res.status(400).json({
-      message: 'Quantidade de propriedades incoerentes',
+      message: 'Entradas inválidas',
     });
   }
 };
 
-// TODO: - Necessário melhoria e sanitização - JEST
+// TODO: - JEST - OK
 const updateCar = async (req: Request, res: Response) => {
-  // Verifica se foi passado um ID por paramêtro, validar a questão do body como pode ser feito (Proteger e Sanitizar)
-  if (req.params.id) {
+  // Verifica se foi passado um ID válido
+  if (isValidObjectId(req.params.id)) {
     try {
-      const body = await Car.findOneAndUpdate(
+      const car = await Car.findOneAndUpdate(
         { _id: req.params.id },
         {
           model: req.body.model,
@@ -65,60 +85,90 @@ const updateCar = async (req: Request, res: Response) => {
         }
       );
       res.status(200).json({
-        // Respostas se tudo ocorrer bem durante a atualização dos dados
         message: 'Atualizado dados do carro',
-        body,
+        status: res.status,
+        car,
       });
     } catch (err) {
       res.status(400).json({
-        // Respostas se ocorrer alguma falha durante a atualização dos dados
         message: 'Erro ao atualizar dados do carro',
+        status: res.status,
+        err,
       });
     }
+  } else {
+    res.status(400).json({
+      message: 'ID inválido, tente novamente com um ID válido',
+      status: res.status,
+    });
   }
 };
 
-// OK - Necessário sanitização - JEST
+// TODO: - JEST - OK
 const getCar = async (req: Request, res: Response) => {
-  // Verifica se temos um parametro ID sendo passado pela URL
-  if (req.params.id) {
+  /// Verifica se foi passado um ID válido
+  if (isValidObjectId(req.params.id)) {
     try {
-      // Realizado consulta no banco de dados para obter o carro por ID
-      const body = await Car.findById(req.params.id);
-      res.status(200).json({
-        // Respostas se tudo ocorrer bem durante a consulta
-        message: 'Consulta efetuado com sucesso',
-        body,
-      });
+      const car = await Car.findById(req.params.id);
+
+      if (car == null) {
+        res.status(400).json({
+          message: 'Erro, não foi encontrado nenhum carro com esse ID',
+          status: res.status,
+        });
+      } else {
+        res.status(200).json({
+          message: 'Consulta efetuado com sucesso',
+          status: res.status,
+          car,
+        });
+      }
     } catch (err) {
-      // Respostas se der algum erro na consulta do banco de dados
       res.status(400).json({
-        message: 'Erro na consulta do banco de dados',
+        message: 'Erro na consulta',
+        status: res.status,
         body: err,
       });
     }
+  } else {
+    res.status(400).json({
+      message: 'ID inválido, tente novamente com um ID válido',
+      status: res.status,
+    });
   }
 };
 
-// OK - Necessário sanitização - JEST
+// TODO: - JEST - OK
 const deleteCar = async (req: Request, res: Response) => {
   // Verifica se temos um parametro ID sendo passado pela URL
-  if (req.params.id) {
+  if (isValidObjectId(req.params.id)) {
     try {
-      // Encontra e deleta por ID
-      const body = await Car.findByIdAndDelete(req.params.id);
-      res.status(200).json({
-        // Respostas se tudo ocorrer bem durante a remoção do carro
-        message: 'Carro deletado com sucesso',
-        body,
-      });
+      const deletedCar = await Car.findByIdAndDelete(req.params.id);
+
+      if (deletedCar == null) {
+        res.status(400).json({
+          message: 'Erro, não foi encontrado nenhum carro com esse ID',
+          status: res.status,
+        });
+      } else {
+        res.status(200).json({
+          message: 'Carro deletado com sucesso',
+          status: res.status,
+          deletedCar,
+        });
+      }
     } catch (err) {
-      // Respostas se der algum erro na hora de deletar do banco de dados
       res.status(400).json({
         message: 'Erro em deletar registro do banco de dados',
-        body: err,
+        status: res.status,
+        err,
       });
     }
+  } else {
+    res.status(400).json({
+      message: 'ID inválido, tente novamente com um ID válido',
+      status: res.status,
+    });
   }
 };
 
