@@ -12,6 +12,9 @@ const schema = new Schema({
     type: String,
   },
   id_user: {
+    type: String,
+  },
+  final_value: {
     type: Number,
   },
 });
