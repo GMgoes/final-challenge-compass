@@ -8,13 +8,13 @@ const createReserve = async (req: Request, res: Response) => {
   if (Object.keys(req.body).length >= 3) {
     try {
       if (!isValidObjectId(req.body.id_car)) {
-        res.status(400).json({
+        return res.status(400).json({
           message: 'ID inválido, tente novamente com um ID válido',
         });
       } else {
         const car = await Car.findById(req.body.id_car);
         if (car == null) {
-          res.status(400).json({
+          return res.status(400).json({
             message: 'Erro, não foi encontrado nenhum carro com esse ID',
           });
         } else {
@@ -32,12 +32,12 @@ const createReserve = async (req: Request, res: Response) => {
           });
 
           if (createdReserve == null) {
-            res.status(400).json({
+            return res.status(400).json({
               message: 'Erro no cadastro',
               status: res.status,
             });
           } else {
-            res.status(201).json({
+            return res.status(201).json({
               message: 'Nova reserva cadastrada',
               status: res.status,
             });
@@ -46,14 +46,14 @@ const createReserve = async (req: Request, res: Response) => {
       }
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
-      res.status(400).json({
+      return res.status(400).json({
         message: 'Erro ao cadastrar a nova reserva',
         status: res.status,
         err,
       });
     }
   } else {
-    res.status(400).json({
+    return res.status(400).json({
       message: 'Entradas inválidas',
     });
   }
@@ -71,13 +71,13 @@ const getReserves = async (req: Request, res: Response) => {
   try {
     const reserves = await Reserve.find(search);
 
-    res.status(200).json({
+    return res.status(200).json({
       message: 'Consulta efetuado com sucesso',
       status: res.status,
       reserves,
     });
   } catch (err) {
-    res.status(400).json({
+    return res.status(400).json({
       message: 'Erro na consulta do banco de dados',
       status: res.status,
       err,
@@ -91,26 +91,26 @@ const getReserve = async (req: Request, res: Response) => {
       const reserve = await Reserve.findById(req.params.id);
 
       if (reserve == null) {
-        res.status(400).json({
+        return res.status(400).json({
           message: 'Erro, não foi encontrado nenhum carro com esse ID',
           status: res.status,
         });
       } else {
-        res.status(200).json({
+        return res.status(200).json({
           message: 'Consulta efetuado com sucesso',
           status: res.status,
           reserve,
         });
       }
     } catch (err) {
-      res.status(400).json({
+      return res.status(400).json({
         message: 'Erro na consulta',
         status: res.status,
         body: err,
       });
     }
   } else {
-    res.status(404).json({
+    return res.status(404).json({
       message: 'ID inválido, tente novamente com um ID válido',
       status: res.status,
     });
@@ -124,22 +124,22 @@ const deleteReserve = async (req: Request, res: Response) => {
       const deletedReserve = await Reserve.findByIdAndDelete(req.params.id);
 
       if (deletedReserve == null) {
-        res.status(404).json({
+        return res.status(404).json({
           message: 'Erro, não foi encontrado nenhuma reserva com esse ID',
           status: res.status,
         });
       } else {
-        res.status(204).json({});
+        return res.status(400);
       }
     } catch (err) {
-      res.status(400).json({
+      return res.status(400).json({
         message: 'Erro em deletar registro do banco de dados',
         status: res.status,
         err,
       });
     }
   } else {
-    res.status(400).json({
+    return res.status(400).json({
       message: 'ID inválido, tente novamente com um ID válido',
       status: res.status,
     });
@@ -150,13 +150,13 @@ const deleteReserve = async (req: Request, res: Response) => {
 const updateReserve = async (req: Request, res: Response) => {
   try {
     if (!isValidObjectId(req.params.id)) {
-      res.status(400).json({
+      return res.status(400).json({
         message: 'ID inválido, tente novamente com um ID válido',
       });
     } else {
       const car = await Car.findById(req.body.id_car);
       if (car == null) {
-        res.status(400).json({
+        return res.status(400).json({
           message:
             'Erro, não foi encontrado nenhuma reserva para esse ID de carro',
         });
@@ -180,12 +180,12 @@ const updateReserve = async (req: Request, res: Response) => {
         );
 
         if (updatedReserve == null) {
-          res.status(400).json({
+          return res.status(400).json({
             message: 'Erro na atualização ',
             status: res.status,
           });
         } else {
-          res.status(201).json({
+          return res.status(201).json({
             message: 'Reserva atualizada',
             status: res.status,
           });
@@ -194,7 +194,7 @@ const updateReserve = async (req: Request, res: Response) => {
     }
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (err: any) {
-    res.status(400).json({
+    return res.status(400).json({
       message: 'Erro ao cadastrar a nova reserva',
       status: res.status,
       err,

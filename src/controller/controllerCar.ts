@@ -13,13 +13,13 @@ const getCars = async (req: Request, res: Response) => {
   try {
     const cars = await Car.find(search);
 
-    res.status(200).json({
+    return res.status(200).json({
       message: 'Consulta efetuado com sucesso',
       status: res.status,
       cars,
     });
   } catch (err) {
-    res.status(400).json({
+    return res.status(400).json({
       message: 'Erro na consulta do banco de dados',
       status: res.status,
       err,
@@ -46,14 +46,14 @@ const createCar = async (req: Request, res: Response) => {
         accessories: req.body.accessories,
         number_of_passengers: req.body.number_of_passengers,
       });
-      res.status(201).json({
+      return res.status(201).json({
         message: 'Registro de carro criado',
         status: res.status,
         body: createdCar,
       });
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
-      res.status(400).json({
+      return res.status(400).json({
         message: 'Erro ao cadastrar o novo carro',
         status: res.status,
         err,
@@ -62,7 +62,7 @@ const createCar = async (req: Request, res: Response) => {
   } else {
     /* Caso quantidade de propriedades passadas por parâmetro seja incoerente com o necessário
     se o ano de fabricação é inválido e se o número de acessórios é igual à 0 */
-    res.status(400).json({
+    return res.status(400).json({
       message: 'Entradas inválidas',
     });
   }
@@ -85,26 +85,26 @@ const updateCar = async (req: Request, res: Response) => {
         }
       );
       if (car == null) {
-        res.status(404).json({
+        return res.status(404).json({
           message: 'Erro, não foi encontrado nenhum carro com esse ID',
           status: res.status,
         });
       } else {
-        res.status(200).json({
+        return res.status(200).json({
           message: 'Atualizado dados do carro',
           status: res.status,
           car,
         });
       }
     } catch (err) {
-      res.status(400).json({
+      return res.status(400).json({
         message: 'Erro ao atualizar dados do carro',
         status: res.status,
         err,
       });
     }
   } else {
-    res.status(400).json({
+    return res.status(400).json({
       message: 'ID inválido, tente novamente com um ID válido',
       status: res.status,
     });
@@ -119,26 +119,26 @@ const getCar = async (req: Request, res: Response) => {
       const car = await Car.findById(req.params.id);
 
       if (car == null) {
-        res.status(400).json({
+        return res.status(400).json({
           message: 'Erro, não foi encontrado nenhum carro com esse ID',
           status: res.status,
         });
       } else {
-        res.status(200).json({
+        return res.status(200).json({
           message: 'Consulta efetuado com sucesso',
           status: res.status,
           car,
         });
       }
     } catch (err) {
-      res.status(400).json({
+      return res.status(400).json({
         message: 'Erro na consulta',
         status: res.status,
         body: err,
       });
     }
   } else {
-    res.status(404).json({
+    return res.status(404).json({
       message: 'ID inválido, tente novamente com um ID válido',
       status: res.status,
     });
@@ -153,22 +153,22 @@ const deleteCar = async (req: Request, res: Response) => {
       const deletedCar = await Car.findByIdAndDelete(req.params.id);
 
       if (deletedCar == null) {
-        res.status(404).json({
+        return res.status(404).json({
           message: 'Erro, não foi encontrado nenhum carro com esse ID',
           status: res.status,
         });
       } else {
-        res.status(204).json({});
+        return res.status(204).json({});
       }
     } catch (err) {
-      res.status(400).json({
+      return res.status(400).json({
         message: 'Erro em deletar registro do banco de dados',
         status: res.status,
         err,
       });
     }
   } else {
-    res.status(400).json({
+    return res.status(400).json({
       message: 'ID inválido, tente novamente com um ID válido',
       status: res.status,
     });
