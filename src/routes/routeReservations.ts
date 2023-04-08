@@ -6,17 +6,19 @@ import {
   getReserves,
   updateReserve,
 } from '../controller/controllerReservations';
+import { protect } from '../controller/authController';
 
 const routerReservation = express.Router();
 
-/* Rota para cadastrar uma reserva com os dados do body e 
-  Rota para listar todas as reservas, possível filtrar também por query */
-routerReservation.route('/reserve').post(createReserve).get(getReserves); // - TODO:Em Desenvolvimento
+routerReservation
+  .route('/reserve')
+  .post(protect, createReserve) // Rota para cadastrar uma reserva com os dados do body
+  .get(getReserves); // Rota para listar todas as reservas, possível filtrar também por query
 
 routerReservation
   .route('/reserve/:id')
-  .get(getReserve) // Rota para listar reservas por ID - TODO:Em Desenvolvimento
-  .delete(deleteReserve) // Rota para deletar uma reserva através de um ID - TODO:Em Desenvolvimento
-  .put(updateReserve); // Rota para atualizar uma reserva através de um ID - TODO:Em Desenvolvimento
+  .get(getReserve) // Rota para listar reservas por ID
+  .delete(protect, deleteReserve) // Rota para deletar uma reserva através de um ID
+  .put(protect, updateReserve); // Rota para atualizar uma reserva através de um ID
 
 export default routerReservation;

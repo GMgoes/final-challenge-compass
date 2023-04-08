@@ -6,16 +6,20 @@ import {
   getCar,
   deleteCar,
 } from '../controller/controllerCar';
+import { protect } from '../controller/authController';
 
 const routerCar = express.Router();
 
 routerCar
   .route('/car')
-  .get(getCars) // Rota para obter todos os carros (Aceita filtro por query) - TODO:Em Desenvolvimento
-  .post(createCar); // Rota para criar um carro - TODO:Em Desenvolvimento
-// Rota para atualizar um carro - TODO:Em Desenvolvimento
-/* .patch(controllerCar) */ // Verficar com os instrutores essa funcionalidade
+  .get(getCars) // Rota para obter todos os carros (Aceita filtro por query)
+  .post(protect, createCar); // Rota para criar um carro
+/* .patch(protect, controllerCar) */ // Rota para atualizar um carro - TODO: Verficar com os instrutores essa funcionalidade
 
-routerCar.route('/car/:id').get(getCar).delete(deleteCar).put(updateCar); // Rotas para obter um carro por ID e para deletar um carro - TODO:Em Desenvolvimento
+routerCar
+  .route('/car/:id')
+  .get(getCar) // Rota para obter um carro por ID
+  .delete(protect, deleteCar) // Rota para deletar um carro
+  .put(protect, updateCar); // Rota para atualizar um carro por ID
 
 export default routerCar;
