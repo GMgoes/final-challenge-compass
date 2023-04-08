@@ -3,20 +3,50 @@ import Car from '../models/Car';
 import { isValidObjectId } from '../utils/utils';
 // TODO: - JEST - Verify the query in accessories - Verify pagination
 const getCars = async (req: Request, res: Response) => {
-  /* Verificamos se estamos recebendo alguma query, se sim
-  vamos utilizá-la para busca, senão buscamos sem nenhum filtro (todos os registros) */
-  const property = Object.keys(req.query)[0];
-  const search = Object.keys(req.query)[0]
-    ? { [property]: req.query[property] }
-    : {};
+  // Default de paginação caso o usuário não selecione nenhum limite de itens por página (limit) ou começo (offset)
+  let limit = 10;
+  let offset = 0;
+  /* Verificamos se estamos recebendo alguma query para buscar itens, se sim
+  vamos utilizá-la para busca, senão buscamos sem nenhum filtro (todos os registros) 
+  TODO: Verificar como pode buscar por mais de uma query, por enquanto está estático com apenas um item*/
+  const property = Object.keys(req.query);
+  const search =
+    Object.keys(req.query).length > 2
+      ? { [property[2]]: req.query[property[2]] }
+      : {};
 
   try {
-    const cars = await Car.find(search);
+    if (req.query.limit) {
+      limit = +req.query.limit;
+    }
+    if (req.query.offset) {
+      offset = +req.query.offset;
+    }
+    const cars = await Car.find(search).skip(offset).limit(limit);
+    const currentUrl = req.baseUrl;
+    const total = await Car.countDocuments({});
+
+    const next = offset + limit;
+    const nextUrl =
+      next < total
+        ? `http://localhost:3000${currentUrl}/car?limit=${limit}&offset=${next}`
+        : 'none';
+
+    const previous = offset - limit > 0 ? offset - limit : null;
+    const previousUrl =
+      previous != null
+        ? `http://localhost:3000${currentUrl}/car?limit=${limit}&offset=${previous}`
+        : 'none';
 
     return res.status(200).json({
       message: 'Consulta efetuado com sucesso',
       status: res.status,
       cars,
+      total,
+      limit,
+      offset,
+      nextUrl,
+      previousUrl,
     });
   } catch (err) {
     return res.status(400).json({

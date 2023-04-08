@@ -3,7 +3,7 @@ import Reserve from '../models/Reserves';
 import Car from '../models/Car';
 import { calculateTotal, isValidObjectId } from '../utils/utils';
 
-// TODO: - JEST - Verify reservers in same period
+// TODO: - JEST
 const createReserve = async (req: Request, res: Response) => {
   if (Object.keys(req.body).length >= 3) {
     try {
@@ -59,22 +59,51 @@ const createReserve = async (req: Request, res: Response) => {
   }
 };
 
-// TODO: - JEST - Optimaze - Verify pagination
+// TODO: - JEST
 const getReserves = async (req: Request, res: Response) => {
+  // Default de paginação caso o usuário não selecione nenhum limite de itens por página (limit) ou começo (offset)
+  let limit = 10;
+  let offset = 0;
   /* Verificamos se estamos recebendo alguma query, se sim
   vamos utilizá-la para busca, senão buscamos sem nenhum filtro (todos os registros) */
-  const property = Object.keys(req.query)[0];
-  const search = Object.keys(req.query)[0]
-    ? { [property]: req.query[property] }
-    : {};
+  const property = Object.keys(req.query);
+  const search =
+    Object.keys(req.query).length > 2
+      ? { [property[2]]: req.query[property[2]] }
+      : {};
 
   try {
-    const reserves = await Reserve.find(search);
+    if (req.query.limit) {
+      limit = +req.query.limit;
+    }
+    if (req.query.offset) {
+      offset = +req.query.offset;
+    }
+    const reserves = await Reserve.find(search).skip(offset).limit(limit);
+    const currentUrl = req.baseUrl;
+    const total = await Reserve.countDocuments({});
+
+    const next = offset + limit;
+    const nextUrl =
+      next < total
+        ? `http://localhost:3000${currentUrl}/reserve?limit=${limit}&offset=${next}`
+        : 'none';
+
+    const previous = offset - limit > 0 ? offset - limit : null;
+    const previousUrl =
+      previous != null
+        ? `http://localhost:3000${currentUrl}/reserve?limit=${limit}&offset=${previous}`
+        : 'none';
 
     return res.status(200).json({
       message: 'Consulta efetuado com sucesso',
       status: res.status,
       reserves,
+      total,
+      limit,
+      offset,
+      nextUrl,
+      previousUrl,
     });
   } catch (err) {
     return res.status(400).json({
