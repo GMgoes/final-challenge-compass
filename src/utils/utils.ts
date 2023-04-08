@@ -1,6 +1,7 @@
 import axios from 'axios';
 import mongoose from 'mongoose';
 import moment from 'moment';
+import jwt from 'jsonwebtoken';
 /* Função para verificar a idade da pessoa,
 retorna a diferença de idade da data de nascimento até agora */
 const verifyDate = function (datePassed: string) {
@@ -95,5 +96,19 @@ function calculateTotal(
 
   return valueTotal;
 }
-
-export { verifyDate, obtainCEP, verifyCPF, isValidObjectId, calculateTotal };
+// Função para criar um token, no payload vai o ID do usuário
+function signToken(id: string, email: string) {
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  return jwt.sign({ id, email }, process.env.SECRET!, {
+    // Válido por 12 horas
+    expiresIn: 43200,
+  });
+}
+export {
+  verifyDate,
+  obtainCEP,
+  verifyCPF,
+  isValidObjectId,
+  calculateTotal,
+  signToken,
+};
