@@ -1,20 +1,19 @@
 import { Request, Response } from 'express';
 import Car from '../models/Car';
-import { isValidObjectId, verifyDuplicateAccessories } from '../utils/utils';
-// TODO: - JEST - Verify the query in accessories - Verify pagination
+import {
+  formatedQuery,
+  isValidObjectId,
+  verifyDuplicateAccessories,
+} from '../utils/utils';
+// OK
 const getCars = async (req: Request, res: Response) => {
   // Default de paginação caso o usuário não selecione nenhum limite de itens por página (limit) ou começo (offset)
   let limit = 10;
   let offset = 0;
   /* Verificamos se estamos recebendo alguma query para buscar itens, se sim
-  vamos utilizá-la para busca, senão buscamos sem nenhum filtro (todos os registros) 
-  TODO: Verificar como pode buscar por mais de uma query, por enquanto está estático com apenas um item*/
-  const property = Object.keys(req.query);
-  const search =
-    Object.keys(req.query).length > 2
-      ? { [property[2]]: req.query[property[2]] }
-      : {};
-
+  vamos utilizá-la para busca, senão buscamos sem nenhum filtro (todos os registros)
+  Essa função descarta o offset e limit, se for passado na query */
+  const search = formatedQuery(req.query);
   try {
     if (req.query.limit) {
       limit = +req.query.limit;
@@ -57,7 +56,7 @@ const getCars = async (req: Request, res: Response) => {
   }
 };
 
-// TODO: - JEST - Verify repeated acessories
+// OK
 const createCar = async (req: Request, res: Response) => {
   /* É verificado a quantidade de propriedades passadas no body
     se o ano de fabricação é válido e se o número de acessórios é maior do que 0. */
@@ -161,6 +160,7 @@ const getCar = async (req: Request, res: Response) => {
           car,
         });
       }
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       return res.status(400).json({
         message: 'Erro na consulta',
