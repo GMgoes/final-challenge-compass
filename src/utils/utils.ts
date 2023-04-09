@@ -104,6 +104,19 @@ function signToken(id: string, email: string) {
     expiresIn: 43200,
   });
 }
+// Função que converte os elementos de um objeto para um array de String (Utilizado para validar se temos acessórios repetidos)
+function verifyDuplicateAccessories(accessoriesArray: any) {
+  const array: string[] = [];
+  accessoriesArray.forEach((element: any) => {
+    array.push(element['description']);
+  });
+  return hasDuplicates(array);
+}
+// Função que valida se um array possuí duplicatas
+function hasDuplicates(array: any) {
+  return new Set(array).size !== array.length;
+}
+
 export {
   verifyDate,
   obtainCEP,
@@ -113,4 +126,5 @@ export {
   signToken,
   formatCPF,
   verifyDigit,
+  verifyDuplicateAccessories,
 };
