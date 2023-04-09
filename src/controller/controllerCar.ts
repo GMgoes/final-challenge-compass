@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import Car from '../models/Car';
-import { isValidObjectId } from '../utils/utils';
+import { isValidObjectId, verifyDuplicateAccessories } from '../utils/utils';
 // TODO: - JEST - Verify the query in accessories - Verify pagination
 const getCars = async (req: Request, res: Response) => {
   // Default de paginação caso o usuário não selecione nenhum limite de itens por página (limit) ou começo (offset)
@@ -65,7 +65,8 @@ const createCar = async (req: Request, res: Response) => {
     Object.keys(req.body).length >= 6 &&
     parseInt(req.body.year) >= 1950 &&
     parseInt(req.body.year) <= 2023 &&
-    req.body.accessories.length > 0
+    req.body.accessories.length > 0 &&
+    verifyDuplicateAccessories(req.body.accessories) == false
   ) {
     try {
       const createdCar = await Car.create({
@@ -91,7 +92,7 @@ const createCar = async (req: Request, res: Response) => {
     }
   } else {
     /* Caso quantidade de propriedades passadas por parâmetro seja incoerente com o necessário
-    se o ano de fabricação é inválido e se o número de acessórios é igual à 0 */
+    se o ano de fabricação é inválido, se o número de acessórios é igual à 0 ou se possuí acessórios repetidos */
     return res.status(400).json({
       message: 'Entradas inválidas',
     });
@@ -160,11 +161,11 @@ const getCar = async (req: Request, res: Response) => {
           car,
         });
       }
-    } catch (err) {
+    } catch (err: any) {
       return res.status(400).json({
         message: 'Erro na consulta',
         status: res.status,
-        body: err,
+        body: err.message,
       });
     }
   } else {
