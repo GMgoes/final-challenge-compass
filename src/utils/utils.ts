@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 import moment from 'moment';
 import jwt from 'jsonwebtoken';
 /* Função para verificar a idade da pessoa,
-retorna a diferença de idade da data de nascimento até agora */
+retorna a diferença de idade da data de nascimento até agora - TODO: Necessary Validated in JEST (new Date()) - How validate this? */
 const verifyDate = function (datePassed: string) {
   const dateToVerify = Date.parse(datePassed);
 
@@ -15,14 +15,14 @@ const verifyDate = function (datePassed: string) {
   return diferenceYears;
 };
 /* Função para obter as informações de regiões segundo o CEP informado,
- retorna o objeto repassado pelo ViaCEP */
+ retorna o objeto repassado pelo ViaCEP - Validated in JEST */
 const obtainCEP = async function (urlCEP: string) {
   const responseObject = await axios.get(urlCEP).then((response) => {
     return response.data;
   });
   return responseObject;
 };
-// Função para verificar se um CPF é válido, retorna true ou false
+// Função para verificar se um CPF é válido, retorna true ou false - Validated in JEST
 const verifyCPF = function (cpfToVerify: string) {
   if (
     formatCPF(cpfToVerify)[9] == verifyDigit(10, cpfToVerify) &&
@@ -34,7 +34,7 @@ const verifyCPF = function (cpfToVerify: string) {
     return false;
   }
 };
-// Função que retorna o CPF formatado (Sem pontos e virgulas até o momento)
+// Função que retorna o CPF formatado (Sem pontos e virgulas até o momento) - Validated in JEST
 function formatCPF(cpf: string) {
   let format = cpf.replaceAll('-', ' ');
   format = format.replaceAll('.', ' ');
@@ -46,7 +46,7 @@ function formatCPF(cpf: string) {
   }
   return vectorCPF;
 }
-// Função que verifica dinamicamente os digitos calculaveis do CPF (10° e 11° dígito), retorna true ou false
+// Função que verifica dinamicamente os digitos calculaveis do CPF (10° e 11° dígito), retorna true ou false - Validated in JEST
 function verifyDigit(weight: number, cpfToVerify: string) {
   const vector = formatCPF(cpfToVerify);
   const length = weight - 1;
@@ -66,7 +66,7 @@ function verifyDigit(weight: number, cpfToVerify: string) {
   }
   return digit;
 }
-// Função que valida se um ID repassado (String) é um ObjectID segundo as definições do MongoDB
+// Função que valida se um ID repassado (String) é um ObjectID segundo as definições do MongoDB - Validated in JEST
 function isValidObjectId(id: string) {
   const ObjectId = mongoose.Types.ObjectId;
   if (ObjectId.isValid(id)) {
@@ -75,7 +75,7 @@ function isValidObjectId(id: string) {
   }
   return false;
 }
-// Função que verifica o preço total da reserva, com base nos dias passados por parâmetro e o preço da diária
+// Função que verifica o preço total da reserva, com base nos dias passados por parâmetro e o preço da diária - Validated in JEST
 function calculateTotal(
   dateFinal: string,
   dateStart: string,
@@ -96,7 +96,7 @@ function calculateTotal(
 
   return valueTotal;
 }
-// Função para criar um token, no payload vai o ID do usuário
+// Função para criar um token, no payload vai o ID do usuário - Validated in JEST
 function signToken(id: string, email: string) {
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   return jwt.sign({ id, email }, process.env.SECRET!, {
@@ -111,4 +111,6 @@ export {
   isValidObjectId,
   calculateTotal,
   signToken,
+  formatCPF,
+  verifyDigit,
 };
