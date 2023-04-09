@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import Reserve from '../models/Reserves';
 import Car from '../models/Car';
-import { calculateTotal, isValidObjectId } from '../utils/utils';
+import { calculateTotal, formatedQuery, isValidObjectId } from '../utils/utils';
 
 // TODO: - JEST
 const createReserve = async (req: Request, res: Response) => {
@@ -64,13 +64,10 @@ const getReserves = async (req: Request, res: Response) => {
   // Default de paginação caso o usuário não selecione nenhum limite de itens por página (limit) ou começo (offset)
   let limit = 10;
   let offset = 0;
-  /* Verificamos se estamos recebendo alguma query, se sim
-  vamos utilizá-la para busca, senão buscamos sem nenhum filtro (todos os registros) */
-  const property = Object.keys(req.query);
-  const search =
-    Object.keys(req.query).length > 2
-      ? { [property[2]]: req.query[property[2]] }
-      : {};
+  /* Verificamos se estamos recebendo alguma query para buscar itens, se sim
+  vamos utilizá-la para busca, senão buscamos sem nenhum filtro (todos os registros)
+  Essa função descarta o offset e limit, se for passado na query */
+  const search = formatedQuery(req.query);
 
   try {
     if (req.query.limit) {

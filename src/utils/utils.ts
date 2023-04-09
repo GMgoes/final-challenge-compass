@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import axios from 'axios';
 import mongoose from 'mongoose';
 import moment from 'moment';
@@ -116,6 +117,17 @@ function verifyDuplicateAccessories(accessoriesArray: any) {
 function hasDuplicates(array: any) {
   return new Set(array).size !== array.length;
 }
+//Função que retira o limit e offset (Se tiver) e retorna um objeto vazio ou com query (Se tiver)
+function formatedQuery(reqQuery: any) {
+  const newQuery: any = {};
+  const array = Object.keys(reqQuery);
+  array.forEach((element: string) => {
+    if (element != 'offset' && element != 'limit') {
+      newQuery[element] = reqQuery[element];
+    }
+  });
+  return newQuery;
+}
 
 export {
   verifyDate,
@@ -127,4 +139,5 @@ export {
   formatCPF,
   verifyDigit,
   verifyDuplicateAccessories,
+  formatedQuery,
 };
