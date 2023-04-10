@@ -91,28 +91,34 @@ npm run start
 
 Now using Postman we can access our endpoints, separating through the three divisions of our project, we have the endpoints of: **Cars**, **Users** and **Reservations**, some routes require authentication of a valid user, they are flagged with a 🔒, let's look at each one of them:
 
+- _Obs: Clicking on one of the lines below will direct you to the explanation of the selected route_
+
 ### Cars - Base Endpoint - /api/v1/car
 
-- GET - http://localhost:3000/api/v1/car
-- GET - http://localhost:3000/api/v1/car/:id
-- POST - http://localhost:3000/api/v1/car 🔒
-- DELETE - http://localhost:3000/api/v1/car/:id 🔒
-- PUT - http://localhost:3000/api/v1/car/:id 🔒
-- PATCH - http://localhost:3000/api/v1/car/:id/acessories/:id 🔒
+[- GET - http://localhost:3000/api/v1/car🔓](#get---httplocalhost3000apiv1car-🔓) <br/>
+[- GET - http://localhost:3000/api/v1/car/:id🔓](#get---httplocalhost3000apiv1carid-🔓)<br/>
+[- POST - http://localhost:3000/api/v1/car 🔒](#post---httplocalhost3000apiv1car-🔒)<br/>
+[- DELETE - http://localhost:3000/api/v1/car/:id 🔒](#delete---httplocalhost3000apiv1carid-🔒)<br/>
+[- PUT - http://localhost:3000/api/v1/car/:id 🔒](#put---httplocalhost3000apiv1carid-🔒)<br/>
+[- PATCH - http://localhost:3000/api/v1/car/:id/acessories/:id 🔒](#patch---httplocalhost3000apiv1caridacessoriesid-🔒)<br/>
 
 ### Reserves - Base Endpoint - /api/v1/reserve
 
-- GET - http://localhost:3000/api/v1/reserve
-- GET - http://localhost:3000/api/v1/reserve/:id
-- POST - http://localhost:3000/api/v1/reserve🔒
-- DELETE - http://localhost:3000/api/v1/reserve/:id 🔒
-- PUT - http://localhost:3000/api/v1/reserve/:id 🔒
+[- GET - http://localhost:3000/api/v1/reserve🔓](#get---httplocalhost3000apiv1reserve-🔓)<br/>
+[- GET - http://localhost:3000/api/v1/reserve/:id🔓](#get---httplocalhost3000apiv1reserveid-🔓)<br/>
+[- POST - http://localhost:3000/api/v1/reserve🔒](#post---httplocalhost3000apiv1reserve-🔒)<br/>
+[- DELETE - http://localhost:3000/api/v1/reserve/:id🔒](#delete---httplocalhost3000apiv1reserveid-🔒)<br/>
+[- PUT - http://localhost:3000/api/v1/reserve/:id 🔒](#put---httplocalhost3000apiv1reserveid-🔒)<br/>
 
 ### Users - Base Endpoint - /api/v1/user
 
-- POST - http://localhost:3000/api/v1/user
-- POST - http://localhost:3000/api/v1/user/authenticate
-- GET - http://localhost:3000/api/v1/user/logout 🔒
+[- POST - http://localhost:3000/api/v1/user🔓](#post---httplocalhost3000apiv1user-🔓)<br/>
+[- POST - http://localhost:3000/api/v1/user/authenticate🔓](#post---httplocalhost3000apiv1userauthenticate-🔓)<br/>
+[- GET - http://localhost:3000/api/v1/user/logout 🔒](#get---httplocalhost3000apiv1userlogout-🔒)<br/>
+[- GET - http://localhost:3000/api/v1/user/:id🔓](#get---httplocalhost3000apiv1userid-🔓)<br/>
+[- DELETE - http://localhost:3000/api/v1/user/:id🔒](#delete---httplocalhost3000apiv1userid-🔒)<br/>
+[- GET - http://localhost:3000/api/v1/user🔓](#get---httplocalhost3000apiv1user🔓)<br/>
+[- PUT - http://localhost:3000/api/v1/user/:id 🔒](#put---httplocalhost3000apiv1userid-🔒)<br/>
 
 <br/>
 <br/>
@@ -237,6 +243,316 @@ Response Body
 ```
 {
     "message": "User Logged out"
+}
+```
+
+<br/>
+<br/>
+
+### - GET - http://localhost:3000/api/v1/user🔓
+
+This route returns all user records from our database, it is also possible to pass query params to filter by a certain attribute, this route also contains pagination for display
+
+## Examples:
+
+Response Body without query params
+
+- http://localhost:3000/api/v1/user
+
+```
+ "message": "Query performed successfully",
+    "users": [
+        {
+            "_id": "642dc2c2c74ce2364f007db5",
+            "name": "Gustavo Goes",
+            "cpf": "060.320.591-70",
+            "birth": "10/09/2001",
+            "email": "dennerr@gmail.com",
+            "cep": "79400000",
+            "qualifed": "yes",
+            "patio": "",
+            "complement": "",
+            "neighborhood": "",
+            "locality": "",
+            "uf": ""
+        },
+        {
+            "_id": "642f33bf9e77935c3bd4c0d0",
+            "name": "Gustavo",
+            "cpf": "949.468.690-00",
+            "birth": "10/09/2001",
+            "email": "ggoes269@gmail.com",
+            "cep": "79400000",
+            "qualifed": "yes",
+            "patio": "",
+            "complement": "",
+            "neighborhood": "",
+            "locality": "",
+            "uf": ""
+        },
+        {
+            "_id": "64337addc553acfeebed05c4",
+            "name": "Joãozinho Ciclano",
+            "cpf": "225.305.080-62",
+            "birth": "03/03/2000",
+            "email": "khamsa9772@uorak.com",
+            "cep": "79400000",
+            "qualifed": "yes",
+            "patio": "",
+            "complement": "",
+            "neighborhood": "",
+            "locality": "",
+            "uf": ""
+        },
+        {
+            "_id": "64337b6ac553acfeebed05d3",
+            "name": "Joãozinho Ciclano",
+            "cpf": "333.973.590-58",
+            "birth": "03/03/2000",
+            "email": "hongjun8080@uorak.com",
+            "cep": "79400000",
+            "qualifed": "yes",
+            "patio": "",
+            "complement": "",
+            "neighborhood": "",
+            "locality": "",
+            "uf": ""
+        },
+        {
+            "_id": "64337bdac155a08ee22efde2",
+            "name": "Joãozinho Ciclano",
+            "cpf": "361.831.450-76",
+            "birth": "03/03/2000",
+            "email": "kornelia5164@uorak.com",
+            "cep": "79400000",
+            "qualifed": "yes",
+            "patio": "",
+            "complement": "",
+            "neighborhood": "",
+            "locality": "",
+            "uf": ""
+        },
+        {
+            "_id": "64337c29ad239f1ff6de262f",
+            "name": "Joãozinho Ciclano",
+            "cpf": "195.269.230-06",
+            "birth": "03/03/2000",
+            "email": "yonghong4743@uorak.com",
+            "cep": "79400000",
+            "qualifed": "yes",
+            "patio": "",
+            "complement": "",
+            "neighborhood": "",
+            "locality": "",
+            "uf": ""
+        },
+        {
+            "_id": "64337dc3a23ae38f59f91674",
+            "name": "Joãozinho Ciclano",
+            "cpf": "288.317.190-41",
+            "birth": "03/03/2000",
+            "email": "assunta1767@uorak.com",
+            "cep": "79400000",
+            "qualifed": "yes",
+            "patio": "",
+            "complement": "",
+            "neighborhood": "",
+            "locality": "",
+            "uf": ""
+        },
+        {
+            "_id": "6433c3fb13181eef4b6e480f",
+            "name": "Joãozinho",
+            "cpf": "091.867.540-50",
+            "birth": "10/09/2001",
+            "email": "abenchara8215@uorak.com",
+            "cep": "79400000",
+            "qualifed": "yes",
+            "patio": "",
+            "complement": "",
+            "neighborhood": "",
+            "locality": "",
+            "uf": ""
+        },
+        {
+            "_id": "6433c49fd8102300bdae5494",
+            "name": "Joãozinho",
+            "cpf": "915.945.120-35",
+            "birth": "10/09/2001",
+            "email": "chegdali7315@uorak.com",
+            "cep": "79400000",
+            "qualifed": "yes",
+            "patio": "",
+            "complement": "",
+            "neighborhood": "",
+            "locality": "",
+            "uf": ""
+        },
+        {
+            "_id": "6433edcd814c4a6cd2db8b9b",
+            "name": "James da salada de fruta",
+            "cpf": "858.454.080-67",
+            "birth": "10/09/1999",
+            "email": "chunhua8035@uorak.comm",
+            "cep": "01001000",
+            "qualifed": "yes",
+            "patio": "Praça da Sé",
+            "complement": "lado ímpar",
+            "neighborhood": "Sé",
+            "locality": "São Paulo",
+            "uf": "SP"
+        }
+    ],
+    "total": 10,
+    "limit": 10,
+    "offset": 0,
+    "nextUrl": "none",
+    "previousUrl": "none"
+}
+```
+
+Response Body with query params
+
+- http://localhost:3000/api/v1/user?name=James%20da%20salada%20de%20fruta
+
+```
+{
+    "message": "Query performed successfully",
+    "users": [
+        {
+            "_id": "6433edcd814c4a6cd2db8b9b",
+            "name": "James da salada de fruta",
+            "cpf": "858.454.080-67",
+            "birth": "10/09/1999",
+            "email": "chunhua8035@uorak.comm",
+            "cep": "01001000",
+            "qualifed": "yes",
+            "patio": "Praça da Sé",
+            "complement": "lado ímpar",
+            "neighborhood": "Sé",
+            "locality": "São Paulo",
+            "uf": "SP"
+        }
+    ],
+    "total": 10,
+    "limit": 10,
+    "offset": 0,
+    "nextUrl": "none",
+    "previousUrl": "none"
+}
+```
+
+<br/>
+<br/>
+
+### - DELETE - http://localhost:3000/api/v1/user/:id 🔒
+
+This route returns a response with an empty body and status 204, if there is no user with that id entered or if it is not a valid id, it will return an error message to the user, this id is provided through the parameters of the URL itself.
+
+## Examples:
+
+With a valid id
+
+```
+{}
+```
+
+With a invalid id
+
+- http://localhost:3000/api/v1/user/ABCDE12345
+
+```
+{
+    "message": "Invalid ID, try again with a valid ID"
+}
+```
+
+<br/>
+<br/>
+
+### - GET - http://localhost:3000/api/v1/user/:id 🔓
+
+This route returns a user that contains the same id as the one informed by parameter in the URL itself, if there is no user with that id informed, or if it is not a valid id, an error is returned to the user
+
+## Examples:
+
+Response Body with a valid id
+
+- http://localhost:3000/api/v1/user/642f33bf9e77935c3bd4c0d0
+
+```
+{
+    "message": "Query performed successfully",
+    "user": {
+        "_id": "642f33bf9e77935c3bd4c0d0",
+        "name": "Gustavo",
+        "cpf": "949.468.690-00",
+        "birth": "10/09/2001",
+        "email": "ggoes269@gmail.com",
+        "cep": "79400000",
+        "qualifed": "yes",
+        "patio": "",
+        "complement": "",
+        "neighborhood": "",
+        "locality": "",
+        "uf": "",
+        "__v": 0
+    }
+}
+```
+
+Response Body without a valid id
+
+- http://localhost:3000/api/v1/user/AAAA
+
+```
+{
+    "message": "Invalid ID of the user, try again with a valid ID"
+}
+```
+
+<br/>
+<br/>
+
+### - PUT - http://localhost:3000/api/v1/user/:id 🔒
+
+This route returns the data of the updated user if the update in the database is successful, the required data and the rules for validating them are the same as for creating a new user, it is also validated if the user is changing his email or cpf , in this case, an insertion of a cpf/email already existing in the database is allowed, if the email and the cpf are his own and he wants to keep this data, but it is validated if he is trying to insert an email already used by another and the the same goes for the cpf, if an error occurs during the insertion, the error is returned to the user
+
+## Examples:
+
+Request Body with a valid id
+
+- http://localhost:3000/api/v1/user/6433edcd814c4a6cd2db8b9b
+
+```
+{
+    "name": "James da salada de fruta",
+    "cpf": "858.454.080-67",
+    "birth": "10/09/1999",
+    "email": "chunhua8035@uorak.comm",
+    "password": "123456",
+    "cep": "01001000",
+    "qualifed": "yes"
+}
+```
+
+Response Body with a valid id
+
+- http://localhost:3000/api/v1/user/AAAA
+
+```
+{
+    "message": "Updated user",
+    "updatedUser": {
+        "id": "6433edcd814c4a6cd2db8b9b",
+        "name": "James da salada de fruta",
+        "cpf": "858.454.080-67",
+        "birth": "10/09/1999",
+        "email": "chunhua8035@uorak.comm",
+        "cep": "James da salada de fruta",
+        "qualifed": "yes",
+        "uf": "SP"
+    }
 }
 ```
 
