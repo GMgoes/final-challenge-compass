@@ -6,6 +6,8 @@ import {
   isValidObjectId,
   calculateTotal,
   signToken,
+  verifyDuplicateAccessories,
+  verifyAccessoryExists,
 } from '../utils/utils';
 import jwt from 'jsonwebtoken';
 import * as dotenv from 'dotenv';
@@ -224,5 +226,67 @@ describe('Function that creates a JWT', () => {
 
     expect(verifyToken.id).toBe(id);
     expect(verifyToken.email).not.toBe('ggoes269@gm');
+  });
+});
+
+describe('Function that verify duplicates acessories in array', () => {
+  test('Function that verify duplicates acessories in array must return true with an array with objects duplicate', () => {
+    const arrayDuplicated = [
+      { description: 'Valor1' },
+      { description: 'Valor2' },
+      { description: 'Valor2' },
+      { description: 'Valor3' },
+    ];
+    const expected = true;
+
+    const result = verifyDuplicateAccessories(arrayDuplicated);
+
+    expect(result).toBe(expected);
+  });
+
+  test('Function that verify duplicates acessories in array must return false with an array without duplicate objects', () => {
+    const arrayDuplicated = [
+      { description: 'Valor1' },
+      { description: 'Valor2' },
+      { description: 'Valor3' },
+      { description: 'Valor4' },
+    ];
+    const expected = false;
+
+    const result = verifyDuplicateAccessories(arrayDuplicated);
+
+    expect(result).toBe(expected);
+  });
+});
+
+describe('Function that verify if an element already exists in an array', () => {
+  test('Function that verify if an element already exists in an array, if the array have at least one element repetead, return true, must return true', () => {
+    const arrayDuplicated = [
+      { description: 'Valor1' },
+      { description: 'Valor2' },
+      { description: 'Valor2' },
+      { description: 'Valor3' },
+    ];
+    const duplicateValue = 'Valor3';
+    const expected = true;
+
+    const result = verifyAccessoryExists(arrayDuplicated, duplicateValue);
+
+    expect(result).toBe(expected);
+  });
+
+  test('Function that verify if an element already exists in an array, if the array have at least one element repetead, return true, must return false', () => {
+    const arrayDuplicated = [
+      { description: 'Valor1' },
+      { description: 'Valor2' },
+      { description: 'Valor3' },
+      { description: 'Valor4' },
+    ];
+    const duplicateValue = 'Valor5';
+    const expected = false;
+
+    const result = verifyAccessoryExists(arrayDuplicated, duplicateValue);
+
+    expect(result).toBe(expected);
   });
 });
