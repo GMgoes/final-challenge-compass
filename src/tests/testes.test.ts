@@ -13,42 +13,42 @@ import * as dotenv from 'dotenv';
 dotenv.config();
 
 jest.mock('axios');
-// CPF Válido gerado no 4devs - 395.512.200-05
-describe('Função que valida CPF', () => {
-  // Deve retornar true para um CPF válido com pontuações (Ponto e Hifen)
-  test('Informando CPF válido com caracteres especiais (Ponto e Hifen)', () => {
+// Valid CPF generated in 4devs - 395.512.200-05
+describe('Function that validates CPF', () => {
+  // Must return true
+  test('Informing valid CPF with special characters (period and hyphen)', () => {
     const cpf = '395.512.200-05';
     const expected = true;
 
     const result = verifyCPF(cpf);
     expect(result).toBe(expected);
   });
-  // Deve retornar true para um CPF válido sem pontuações
-  test('Informando CPF válido sem caracteres (Somente números)', () => {
+  // Must return true
+  test('Informing valid CPF without characters (Only numbers)', () => {
     const cpf = '39551220005';
     const expected = true;
 
     const result = verifyCPF(cpf);
     expect(result).toBe(expected);
   });
-  // Deve retornar false para um CPF inválido com pontuações (Ponto e Hifen)
-  test('Informando CPF inválido com caracteres especiais (Ponto e Hifen)', () => {
+  // Must return false
+  test('Informing invalid CPF with special characters (Dot and Hyphen)', () => {
     const cpf = '395.512.200-04';
     const expected = false;
 
     const result = verifyCPF(cpf);
     expect(result).toBe(expected);
   });
-  // Deve retornar false para um CPF inválido sem pontuações
-  test('Informando CPF inválido sem caracteres (Somente números)', () => {
+  // Must return false
+  test('Informing invalid CPF with special characters (Dot and Hyphen)', () => {
     const cpf = '39551220004';
     const expected = false;
 
     const result = verifyCPF(cpf);
     expect(result).toBe(expected);
   });
-  // Deve retornar false para um CPF inválido por conta da quantidade de dígitos, com pontuações (Ponto e Hifen)
-  test('Informando CPF inválido com mais de 11 dígitos com caracteres especiais (Ponto e Hifen)', () => {
+  // Must return false
+  test('Informing invalid CPF with more than 11 digits with special characters (Period and Hyphen', () => {
     const cpf = '395.512.200-055';
     const expected = false;
 
@@ -57,25 +57,25 @@ describe('Função que valida CPF', () => {
   });
 });
 
-describe('Função que formata CPF', () => {
-  // O tamanho da string retornada deve ser menor que a inserida
-  test('Informando CPF com caracteres especiais (Ponto e Hifen)', () => {
+describe('Function that formats CPF', () => {
+  // The length of the returned string must be smaller than the one entered
+  test('Informing CPF with special characters (Dot and Hyphen)', () => {
     const cpf = '395.512.200-05';
 
     const result = formatCPF(cpf).length;
 
     expect(result).toBeLessThan(cpf.length);
   });
-  // O tamanho da string retornada deve ser igual que a inserida
-  test('Informando CPF sem caracteres especiais (Somente números)', () => {
+  // The length of the returned string must be the same as the one entered
+  test('Informing CPF without special characters (Only numbers)', () => {
     const cpf = '39551220005';
 
     const result = formatCPF(cpf).length;
 
     expect(result).toEqual(cpf.length);
   });
-  // O tamanho da string retornada deve ser igual que a inserida
-  test('Informando CPF com outros caracteres especiais, sem ser ponto e hífen', () => {
+  // The length of the returned string must be the same as the one entered
+  test('Informing CPF with other special characters, other than dots and hyphens', () => {
     const cpf = '395*512*200@05';
 
     const result = formatCPF(cpf).length;
@@ -84,8 +84,8 @@ describe('Função que formata CPF', () => {
   });
 });
 
-describe('Função que obtem o CEP', () => {
-  test('Informando um CEP válido com oito digitos', () => {
+describe('Function that gets the CEP from viaCEP', () => {
+  test('Informing a valid CEP code with eight digits', () => {
     const mockedAxios = axios as jest.Mocked<typeof axios>;
     const response = {
       data: {
@@ -119,7 +119,7 @@ describe('Função que obtem o CEP', () => {
       expect(data).toEqual(response.data)
     );
   });
-  test('Informando um CEP com quantidade diferente de oito digitos', () => {
+  test('Informing a zip code with a different quantity of eight digits', () => {
     const mockedAxios = axios as jest.Mocked<typeof axios>;
     const response = { data: {} };
     mockedAxios.get.mockResolvedValue({ data: {} });
@@ -127,7 +127,7 @@ describe('Função que obtem o CEP', () => {
       expect(data).toEqual(response.data)
     );
   });
-  test('Informando um CEP inválido', () => {
+  test('Reporting an invalid zip code', () => {
     jest.mock('axios');
     const mockedAxios = axios as jest.Mocked<typeof axios>;
     const response = {
@@ -146,8 +146,8 @@ describe('Função que obtem o CEP', () => {
   });
 });
 
-describe('Função que valida o digito solicitado do CPF', () => {
-  test('Informando CPF e solicitado para verificar se o 10° digito está correto', () => {
+describe('Function that validates the requested digit of the CPF', () => {
+  test('Informing CPF and asked to verify that the 10th digit is correct', () => {
     const cpf = '39551220005';
     const weight = 10;
     const expected = +cpf[9];
@@ -156,7 +156,7 @@ describe('Função que valida o digito solicitado do CPF', () => {
 
     expect(digit).toBe(expected);
   });
-  test('Informando CPF com digitos inviáveis para a verificação', () => {
+  test('Informing CPF with unfeasible digits for verification', () => {
     const cpf = '3@5&1220005';
     const weight = 10;
     const expected = NaN;
@@ -166,22 +166,22 @@ describe('Função que valida o digito solicitado do CPF', () => {
   });
 });
 
-describe('Função que valida se uma string é um ObjectId válido', () => {
-  test('Informando uma string válida gerada pelo MongoDB', () => {
+describe('function that validates if a string is a valid ObjectId', () => {
+  test('Entering a valid string generated by MongoDB', () => {
     const id = '507f191e810c19729de860ea';
     const expected = true;
 
     const result = isValidObjectId(id);
     expect(result).toBe(expected);
   });
-  test('Informando uma string inválida gerada aleatoriamente (Caracteres especiais)', () => {
+  test('Informing a randomly generated invalid string (Special Characters)', () => {
     const id = 'C+gOQ,di6h-:{4]}h-KmiYZ,I&&aOgfq';
     const expected = false;
 
     const result = isValidObjectId(id);
     expect(result).toBe(expected);
   });
-  test('Informando uma string inválida vazia', () => {
+  test('Reporting an empty invalid string', () => {
     const id = '';
     const expected = false;
 
@@ -190,8 +190,8 @@ describe('Função que valida se uma string é um ObjectId válido', () => {
   });
 });
 
-describe('Função que valida o calculo de uma reserva', () => {
-  test('Informando um período válido', () => {
+describe('Function that validates the calculation of a reservation', () => {
+  test('Entering a valid period', () => {
     const dateStart = '05/04/2023';
     const dateFinal = '10/04/2023';
     const valuePerDay = 25;
@@ -202,24 +202,24 @@ describe('Função que valida o calculo de uma reserva', () => {
   });
 });
 
-describe('Função que cria um JWT', () => {
-  test('Verificando se um JWT contém o payload conforme o esperado', async () => {
+describe('Function that creates a JWT', () => {
+  test('Checking if a JWT contains the payload as expected', async () => {
     const id = '507f191e810c19729de860ea';
     const email = 'ggoes269@gmail.com';
 
     const result = await signToken(id, email);
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion, @typescript-eslint/no-explicit-any
     const verifyToken: any = await jwt.verify(result, process.env.SECRET!);
 
     expect(verifyToken.id).toBe(id);
     expect(verifyToken.email).toBe(email);
   });
-  test('Verificando se um JWT contém o payload diferente do esperado (Email alterado)', async () => {
+  test('Checking if a JWT contains payload different than expected (Email changed', async () => {
     const id = '507f191e810c19729de860ea';
     const email = 'ggoes269@gmail.com';
 
     const result = await signToken(id, email);
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion, @typescript-eslint/no-explicit-any
     const verifyToken: any = await jwt.verify(result, process.env.SECRET!);
 
     expect(verifyToken.id).toBe(id);

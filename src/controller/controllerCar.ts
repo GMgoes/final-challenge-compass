@@ -8,14 +8,15 @@ import {
 } from '../utils/utils';
 // OK
 const getCars = async (req: Request, res: Response) => {
-  // Default de paginação caso o usuário não selecione nenhum limite de itens por página (limit) ou começo (offset)
+  // Pagination default if the user does not select any limit of items per page (limit) or beginning (offset)
   let limit = 10;
   let offset = 0;
-  /* Verificamos se estamos recebendo alguma query para buscar itens, se sim
-  vamos utilizá-la para busca, senão buscamos sem nenhum filtro (todos os registros)
-  Essa função descarta o offset e limit, se for passado na query */
+  /* We check if we are receiving any queries to fetch items, if so
+  let's use it for search, otherwise we search without any filter (all records)
+  This function discards the offset and limit, if passed in the query */
   const search = formatedQuery(req.query);
   try {
+    // We check if the user wants to insert some pagination through the query
     if (req.query.limit) {
       limit = +req.query.limit;
     }
@@ -39,7 +40,7 @@ const getCars = async (req: Request, res: Response) => {
         : 'none';
 
     return res.status(200).json({
-      message: 'Consulta efetuado com sucesso',
+      message: 'Query performed successfully',
       status: res.status,
       cars,
       total,
@@ -50,7 +51,7 @@ const getCars = async (req: Request, res: Response) => {
     });
   } catch (err) {
     return res.status(400).json({
-      message: 'Erro na consulta do banco de dados',
+      message: 'Database query error',
       status: res.status,
       err,
     });
@@ -59,8 +60,9 @@ const getCars = async (req: Request, res: Response) => {
 
 // OK
 const createCar = async (req: Request, res: Response) => {
-  /* É verificado a quantidade de propriedades passadas no body
-    se o ano de fabricação é válido e se o número de acessórios é maior do que 0. */
+  /* The amount of properties passed in the body is checked
+    if the year of manufacture is valid, if the number of accessories is greater than 0
+    and if there are duplicate accessories.*/
   if (
     Object.keys(req.body).length >= 6 &&
     parseInt(req.body.year) >= 1950 &&
@@ -78,29 +80,32 @@ const createCar = async (req: Request, res: Response) => {
         number_of_passengers: req.body.number_of_passengers,
       });
       return res.status(201).json({
-        message: 'Registro de carro criado',
+        message: 'Car registration created',
         status: res.status,
         body: createdCar,
       });
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       return res.status(400).json({
-        message: 'Erro ao cadastrar o novo carro',
+        message: 'Error registering new car',
         status: res.status,
         err,
       });
     }
   } else {
-    /* Caso quantidade de propriedades passadas por parâmetro seja incoerente com o necessário
-    se o ano de fabricação é inválido, se o número de acessórios é igual à 0 ou se possuí acessórios repetidos */
+    /* If the number of properties passed per parameter is inconsistent with what is required
+    if the year of manufacture is invalid, if the number of accessories is equal to 0 or if you have repeated accessories */
     return res.status(400).json({
-      message: 'Entradas inválidas',
+      message: 'Invalid entries',
     });
   }
 };
 
 // OK
 const updateCar = async (req: Request, res: Response) => {
+  /* The amount of properties passed in the body is checked
+    if the year of manufacture is valid, if the number of accessories is greater than 0
+    and if there are duplicate accessories.*/
   if (
     isValidObjectId(req.params.id) &&
     Object.keys(req.body).length >= 6 &&
@@ -124,26 +129,26 @@ const updateCar = async (req: Request, res: Response) => {
       const carUpdated = await Car.findById(req.params.id);
       if (car == null) {
         return res.status(404).json({
-          message: 'Erro, não foi encontrado nenhum carro com esse ID',
+          message: 'Error, no car found with that ID',
           status: res.status,
         });
       } else {
         return res.status(200).json({
-          message: 'Atualizado dados do carro',
+          message: 'Updated car data',
           status: res.status,
           car: carUpdated,
         });
       }
     } catch (err) {
       return res.status(400).json({
-        message: 'Erro ao atualizar dados do carro',
+        message: 'Error updating car data',
         status: res.status,
         err,
       });
     }
   } else {
     return res.status(400).json({
-      message: 'ID inválido, tente novamente com um ID válido',
+      message: 'Invalid ID, try again with a valid ID',
       status: res.status,
     });
   }
@@ -151,19 +156,19 @@ const updateCar = async (req: Request, res: Response) => {
 
 // OK
 const getCar = async (req: Request, res: Response) => {
-  /// Verifica se foi passado um ID válido
+  /// Checks if a valid ID was passed
   if (isValidObjectId(req.params.id)) {
     try {
       const car = await Car.findById(req.params.id, '-__v');
 
       if (car == null) {
         return res.status(400).json({
-          message: 'Erro, não foi encontrado nenhum carro com esse ID',
+          message: 'Error, no car found with that ID',
           status: res.status,
         });
       } else {
         return res.status(200).json({
-          message: 'Consulta efetuado com sucesso',
+          message: 'Query performed successfully',
           status: res.status,
           car,
         });
@@ -171,14 +176,14 @@ const getCar = async (req: Request, res: Response) => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       return res.status(400).json({
-        message: 'Erro na consulta',
+        message: 'Query error',
         status: res.status,
         body: err.message,
       });
     }
   } else {
     return res.status(404).json({
-      message: 'ID inválido, tente novamente com um ID válido',
+      message: 'Invalid ID, try again with a valid ID',
       status: res.status,
     });
   }
@@ -186,14 +191,15 @@ const getCar = async (req: Request, res: Response) => {
 
 // OK
 const deleteCar = async (req: Request, res: Response) => {
-  // Verifica se temos um parametro ID sendo passado pela URL
+  // Checks if we have an ID parameter being passed by the URL
   if (isValidObjectId(req.params.id)) {
     try {
+      // Checks if there is a car with that ID
       const deletedCar = await Car.findByIdAndDelete(req.params.id);
 
       if (deletedCar == null) {
         return res.status(404).json({
-          message: 'Erro, não foi encontrado nenhum carro com esse ID',
+          message: 'Error, no car found with that ID',
           status: res.status,
         });
       } else {
@@ -201,46 +207,55 @@ const deleteCar = async (req: Request, res: Response) => {
       }
     } catch (err) {
       return res.status(400).json({
-        message: 'Erro em deletar registro do banco de dados',
+        message: 'Error in deleting database record',
         status: res.status,
         err,
       });
     }
   } else {
     return res.status(400).json({
-      message: 'ID inválido, tente novamente com um ID válido',
+      message: 'Invalid ID, try again with a valid ID',
       status: res.status,
     });
   }
 };
 
+// OK
 const updateAccessories = async (req: Request, res: Response) => {
+  // We separate the original URL by the / character
   const url = req.originalUrl.split('/');
+  // We get the id of the item to be updated and the id of the description object
   const id = url[4];
   const accessoryId = parseInt(url[6]);
+  // We also get the new object passed by the request body
   const newAcessory = req.body.description;
-
+  // We check if there is a car with that ID
   const car = await Car.findById({ _id: id });
 
   if (car != null) {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const accessories = car!.accessories;
+    // We checked if with this new description object we would have an array with duplicates
     const operation = verifyAccessoryExists(accessories, newAcessory);
 
+    /* In case it is not a duplicate and the place the user wants to insert is an id greater than the size of the vector,
+    then we take it and insert it at the end of the vector */
     if (accessoryId < accessories.length - 1 || !accessoryId) {
+      // Check if it's a duplicate, and if not, then we update the location on the ID that the user entered and overwrite the object that was inside
       if (!operation) {
         accessories[accessoryId] = { description: newAcessory };
       }
+      // If it is a duplicate and the accessory being passed in the request body is the same accessory that is there, then we delete it
       if (operation && accessories[accessoryId]['description'] == newAcessory) {
         accessories.splice(accessoryId, 1);
       }
     } else {
+      // Here we add it to the end of the list in case it is not a duplicate
       if (!operation) {
         accessories.push({ description: newAcessory });
       } else {
         return res.status(400).json({
-          message:
-            'Não é possível adicionar esse item de novo, ele já está na lista',
+          message: 'Cannot add this item again, it is already in the list',
           status: res.status,
         });
       }
@@ -253,13 +268,13 @@ const updateAccessories = async (req: Request, res: Response) => {
     );
     const updatedCar = await Car.findById({ _id: id });
     return res.status(200).json({
-      message: 'Carro atualizado',
+      message: 'Updated car',
       status: res.status,
       car: updatedCar,
     });
   } else {
     return res.status(404).json({
-      message: 'Nenhum carro encontrado com esse ID',
+      message: 'No car found with that ID',
       status: res.status,
     });
   }

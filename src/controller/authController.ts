@@ -4,10 +4,11 @@ import jwt from 'jsonwebtoken';
 import User from '../models/User';
 import { signToken } from '../utils/utils';
 
+// OK
 const createSendToken = (id: string, email: string, res: Response) => {
   const token = signToken(id, email);
   const cookieOptions = {
-    // Cookie que salva o JWT é válido por 12 horas
+    // Cookie that save JWT is valid for 12 hours
     expires: new Date(Date.now() + 43200000),
     httpOnly: true,
   };
@@ -16,18 +17,21 @@ const createSendToken = (id: string, email: string, res: Response) => {
   return token;
 };
 
+// OK
 const protect = async (req: Request, res: Response, next: NextFunction) => {
   let token;
+  // We check if we have the cookie with the JWT stored in the headers of our request, which means that the user is logged in
   if (req.headers.cookie) {
     token = req.headers.cookie.split('=')[1];
   }
   if (!token) {
     return res.status(401).json({
       status: res.status,
-      message: 'Você não está logado',
+      message: 'You are not logged in',
     });
   }
 
+  // Decode the stored token and verify that it is valid and that it belongs to a user
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const decoded: any = jwt.verify(token, process.env.SECRET!);
   const currentUser = await User.findById(decoded.id!);
@@ -35,14 +39,16 @@ const protect = async (req: Request, res: Response, next: NextFunction) => {
   if (!currentUser) {
     return res.status(401).json({
       status: res.status,
-      message: 'Esse token não é mais válido',
+      message: 'This token is no longer valid',
     });
   }
   res.locals.user = currentUser;
   next();
 };
 
+// OK
 const logout = async (_: Request, res: Response) => {
+  // We delete the JWT token in the browser header
   res.clearCookie('JWT');
   return res.status(401).json({
     status: res.status,
