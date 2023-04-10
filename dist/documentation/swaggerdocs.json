@@ -1,0 +1,1055 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Car Grids - API",
+        "description": "API documentation developed as a final Compass challenge proposal",
+        "version": "1.0.0",
+        "contact": {
+            "email": "ggoes269@gmail.com"
+        }
+    },
+    "servers": [{
+            "description": "SwaggerHub API Auto Mocking",
+            "url": "https://virtserver.swaggerhub.com/GMgoes/Challenge-Final/1.0.0"
+        }, {
+            "url": "localhost:3000/api/v1",
+            "description": "Development"
+        }],
+    "tags": [{
+            "name": "Car",
+            "description": "Everything about our Cars"
+        }, {
+            "name": "User",
+            "description": "Everything about our Users"
+        }, {
+            "name": "Reserve",
+            "description": "Everything about our Reserves"
+        }],
+    "paths": {
+        "/car": {
+            "get": {
+                "tags": ["Car"],
+                "summary": "Get car registrations",
+                "description": "Returns all car records in the database, also possible to filter by query",
+                "parameters": [{
+                        "in": "query",
+                        "name": "paramQuery",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "Search car registrations based on the entered query",
+                        "required": false
+                    }],
+                "responses": {
+                    "200": {
+                        "description": "Return a response with all cars",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GetCars"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Return a response with status code 400 and error message in case of failure of getting all results",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "description": "Error in consult all cars."
+                                        },
+                                        "status": {
+                                            "type": "number",
+                                            "description": 400.0
+                                        },
+                                        "err": {
+                                            "type": "string",
+                                            "description": "Error message."
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": ["Car"],
+                "summary": "Create a car registration",
+                "description": "Create a car record based on information passed in the request body",
+                "parameters": [{
+                        "in": "body",
+                        "name": "body",
+                        "description": "Data necessary to create a car, passed by request body",
+                        "required": true,
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "model": {
+                                    "type": "string"
+                                },
+                                "color": {
+                                    "type": "string"
+                                },
+                                "year": {
+                                    "type": "string"
+                                },
+                                "value_per_day": {
+                                    "type": "number"
+                                },
+                                "accessories": {
+                                    "type": "array",
+                                    "items": [{
+                                            "description": null
+                                        }]
+                                },
+                                "number_of_passengers": {
+                                    "type": "number"
+                                }
+                            }
+                        }
+                    }],
+                "responses": {
+                    "201": {
+                        "description": "Return a response with status code 201, success message and the created car",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResponseCar"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Return a response with status code 400 and error message in case of failure of creating this car",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "description": "Error in create a car."
+                                        },
+                                        "status": {
+                                            "type": "number",
+                                            "description": 400.0
+                                        },
+                                        "err": {
+                                            "type": "string",
+                                            "description": "Error message."
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/car/:id": {
+            "get": {
+                "tags": ["Car"],
+                "summary": "Get a car registration",
+                "description": "Return a car based on id",
+                "parameters": [{
+                        "name": "id",
+                        "in": "path",
+                        "description": "Car id to be find",
+                        "required": true,
+                        "type": "string"
+                    }],
+                "responses": {
+                    "200": {
+                        "description": "Return a response with status code 200, success message and the car returned",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResponseCar"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Return a response with status code 400 and error message in case of failure of the consult",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "description": "Error in consult a car with this id."
+                                        },
+                                        "status": {
+                                            "type": "number",
+                                            "description": 400.0
+                                        },
+                                        "err": {
+                                            "type": "string",
+                                            "description": "Error message."
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Return a response with status code 404 and error message in case of failure, can't find a car with this id",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "description": "Error in consult, can't find a car with this id."
+                                        },
+                                        "status": {
+                                            "type": "number",
+                                            "description": 400.0
+                                        },
+                                        "err": {
+                                            "type": "string",
+                                            "description": "Error message."
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": ["Car"],
+                "summary": "Delete a car registration",
+                "description": "Delete a car based on id",
+                "parameters": [{
+                        "name": "id",
+                        "in": "path",
+                        "description": "Car id to be deleted",
+                        "required": true,
+                        "type": "string"
+                    }],
+                "responses": {
+                    "200": {
+                        "description": "Return a response with status code 204 with success message",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResponseEmpty"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Return a response with status code 400 and error message in case of failure of deleting operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "description": "Error in delete this car."
+                                        },
+                                        "status": {
+                                            "type": "number",
+                                            "description": 400.0
+                                        },
+                                        "err": {
+                                            "type": "string",
+                                            "description": "Error message."
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": ["Car"],
+                "summary": "Update a car registration",
+                "description": "Update a car based on id",
+                "parameters": [{
+                        "in": "path",
+                        "name": "id",
+                        "description": "Car id that will be updated",
+                        "type": "string",
+                        "required": true
+                    }],
+                "responses": {
+                    "200": {
+                        "description": "Return a response with status code 200, success message and the car now updated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResponseCar"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Return a response with status code 400 and error message in case of failure of the update operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "description": "Error in update this car."
+                                        },
+                                        "status": {
+                                            "type": "number",
+                                            "description": 400.0
+                                        },
+                                        "err": {
+                                            "type": "string",
+                                            "description": "Error message."
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Return a response with status code 404 and error message in case of failure, can't find a car with this id",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "description": "Error in update, can't find a car with this id."
+                                        },
+                                        "status": {
+                                            "type": "number",
+                                            "description": 404.0
+                                        },
+                                        "err": {
+                                            "type": "string",
+                                            "description": "Error message."
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/user": {
+            "post": {
+                "tags": ["User"],
+                "summary": "Create a user registration",
+                "description": "Create a user record based on information passed in the request body",
+                "parameters": [{
+                        "in": "body",
+                        "name": "body",
+                        "description": "Data necessary to create a user, passed by request body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/components/schemas/InputUser"
+                        }
+                    }],
+                "responses": {
+                    "201": {
+                        "description": "Return a response with status code 201, success message and the created user",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResponseUser"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Return a response with status code 400 and error message in case of failure of creating this user",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "description": "Error in create a user."
+                                        },
+                                        "status": {
+                                            "type": "number",
+                                            "description": 400.0
+                                        },
+                                        "err": {
+                                            "type": "string",
+                                            "description": "Error message."
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/users/authenticate": {
+            "post": {
+                "tags": ["User"],
+                "summary": "Login a user in system",
+                "parameters": [{
+                        "in": "body",
+                        "name": "body",
+                        "description": "Data necessary to Login a user in system, passed by request body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/components/schemas/LoginUser"
+                        }
+                    }],
+                "responses": {
+                    "201": {
+                        "description": "Return a response with status code 200, success message and the token validated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResponseLogin"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Return a response with status code 400 and error message in case of failure of login",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "description": "Error in login a user."
+                                        },
+                                        "status": {
+                                            "type": "number",
+                                            "description": 400.0
+                                        },
+                                        "err": {
+                                            "type": "string",
+                                            "description": "Error message."
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/users/logout": {
+            "get": {
+                "tags": ["User"],
+                "summary": "Logout a user",
+                "description": "Logout a user in system (Delete the JWT)",
+                "responses": {
+                    "401": {
+                        "description": "Return a response with status code 401 with success message",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResponseEmpty"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/reserve": {
+            "get": {
+                "tags": ["Reserve"],
+                "summary": "Get reserves registrations",
+                "description": "Returns all reserves records in the database, also possible to filter by query",
+                "produces": ["application/json"],
+                "parameters": [{
+                        "in": "query",
+                        "name": "paramQuery",
+                        "description": "Search reserves registrations based on the entered query",
+                        "required": false
+                    }],
+                "responses": {
+                    "200": {
+                        "description": "Return a response with all reserves",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GetReserves"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Return a response with status code 400 and error message in case of failure of getting all reserves",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "description": "Error in consult all reserves."
+                                        },
+                                        "status": {
+                                            "type": "number",
+                                            "description": 400.0
+                                        },
+                                        "err": {
+                                            "type": "string",
+                                            "description": "Error message."
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": ["Reserve"],
+                "summary": "Create a reserve registration",
+                "description": "Create a reserve record based on information passed in the request body",
+                "parameters": [{
+                        "in": "body",
+                        "name": "body",
+                        "description": "Data necessary to create a reserve, passed by request body",
+                        "required": true,
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "start_date": {
+                                    "type": "string"
+                                },
+                                "end_date": {
+                                    "type": "string"
+                                },
+                                "id_car": {
+                                    "type": "string"
+                                },
+                                "id_user": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }],
+                "responses": {
+                    "201": {
+                        "description": "Return a response with status code 201, success message and the created reserve",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResponseReserve"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Return a response with status code 400 and error message in case of failure of creating this reserve",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "description": "Error in create a car."
+                                        },
+                                        "status": {
+                                            "type": "number",
+                                            "description": 400.0
+                                        },
+                                        "err": {
+                                            "type": "string",
+                                            "description": "Error message."
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/reserve/:id": {
+            "get": {
+                "tags": ["Reserve"],
+                "summary": "Get a reserve registration",
+                "description": "Return a reservation based on id",
+                "parameters": [{
+                        "name": "id",
+                        "in": "path",
+                        "description": "Reservation id to be find",
+                        "required": true,
+                        "type": "string"
+                    }],
+                "responses": {
+                    "200": {
+                        "description": "Return a response with status code 200, success message and the reserve returned",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResponseReserve"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Return a response with status code 400 and error message in case of failure of the consult",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "description": "Error in consult a reserve with this id."
+                                        },
+                                        "status": {
+                                            "type": "number",
+                                            "description": 400.0
+                                        },
+                                        "err": {
+                                            "type": "string",
+                                            "description": "Error message."
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Return a response with status code 404 and error message in case of failure, can't find a reserve with this id",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "description": "Error in consult, can't find a reserve with this id."
+                                        },
+                                        "status": {
+                                            "type": "number",
+                                            "description": 400.0
+                                        },
+                                        "err": {
+                                            "type": "string",
+                                            "description": "Error message."
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": ["Reserve"],
+                "summary": "Delete a reserve registration",
+                "description": "Delete a reservation based on id",
+                "parameters": [{
+                        "name": "id",
+                        "in": "path",
+                        "description": "Reservation id to be deleted",
+                        "required": true,
+                        "type": "string"
+                    }],
+                "responses": {
+                    "204": {
+                        "description": "Return a response with status code 204 with success message",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResponseEmpty"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Return a response with status code 400 and error message in case of failure of deleting operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "description": "Error in delete this reserve."
+                                        },
+                                        "status": {
+                                            "type": "number",
+                                            "description": 400.0
+                                        },
+                                        "err": {
+                                            "type": "string",
+                                            "description": "Error message."
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": ["Reserve"],
+                "summary": "Update a reserve registration",
+                "description": "Update a reservation based on id",
+                "parameters": [{
+                        "in": "path",
+                        "name": "id",
+                        "description": "Reservation id that will be updated",
+                        "type": "string",
+                        "required": true
+                    }],
+                "responses": {
+                    "201": {
+                        "description": "Return a response with status code 201, success message and the reserve now updated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResponseReserve"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Return a response with status code 400 and error message in case of failure of the update operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "description": "Error in update this reserve."
+                                        },
+                                        "status": {
+                                            "type": "number",
+                                            "description": 400.0
+                                        },
+                                        "err": {
+                                            "type": "string",
+                                            "description": "Error message."
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Return a response with status code 404 and error message in case of failure, can't find a reserve with this id",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "description": "Error in update, can't find a reserve with this id."
+                                        },
+                                        "status": {
+                                            "type": "number",
+                                            "description": 404.0
+                                        },
+                                        "err": {
+                                            "type": "string",
+                                            "description": "Error message."
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "Car": {
+                "type": "object",
+                "properties": {
+                    "model": {
+                        "type": "string"
+                    },
+                    "color": {
+                        "type": "string"
+                    },
+                    "year": {
+                        "type": "string"
+                    },
+                    "value_per_day": {
+                        "type": "number"
+                    },
+                    "number_of_passengers": {
+                        "type": "number"
+                    },
+                    "accessories": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "description": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "User": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string"
+                    },
+                    "cpf": {
+                        "type": "string"
+                    },
+                    "birth": {
+                        "type": "string"
+                    },
+                    "email": {
+                        "type": "string"
+                    },
+                    "password": {
+                        "type": "string"
+                    },
+                    "cep": {
+                        "type": "string"
+                    },
+                    "qualifed": {
+                        "type": "string"
+                    },
+                    "patio": {
+                        "type": "string"
+                    },
+                    "complement": {
+                        "type": "string"
+                    },
+                    "neighborhood": {
+                        "type": "string"
+                    },
+                    "locality": {
+                        "type": "string"
+                    },
+                    "uf": {
+                        "type": "string"
+                    }
+                }
+            },
+            "Reserve": {
+                "type": "object",
+                "properties": {
+                    "start_date": {
+                        "type": "string"
+                    },
+                    "end_date": {
+                        "type": "string"
+                    },
+                    "id_car": {
+                        "type": "string"
+                    },
+                    "id_user": {
+                        "type": "string"
+                    },
+                    "final_value": {
+                        "type": "number"
+                    }
+                }
+            },
+            "InputUser": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string"
+                    },
+                    "cpf": {
+                        "type": "string"
+                    },
+                    "birth": {
+                        "type": "string"
+                    },
+                    "email": {
+                        "type": "string"
+                    },
+                    "password": {
+                        "type": "string"
+                    },
+                    "cep": {
+                        "type": "string"
+                    },
+                    "qualifed": {
+                        "type": "string"
+                    }
+                }
+            },
+            "LoginUser": {
+                "type": "object",
+                "properties": {
+                    "email": {
+                        "type": "string"
+                    },
+                    "password": {
+                        "type": "string"
+                    }
+                }
+            },
+            "GetCars": {
+                "type": "object",
+                "properties": {
+                    "message": {
+                        "type": "string"
+                    },
+                    "status": {
+                        "type": "number"
+                    },
+                    "cars": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Car"
+                        }
+                    },
+                    "total": {
+                        "type": "number"
+                    },
+                    "limit": {
+                        "type": "number"
+                    },
+                    "offset": {
+                        "type": "number"
+                    },
+                    "nextUrl": {
+                        "type": "string"
+                    },
+                    "previousUrl": {
+                        "type": "string"
+                    }
+                }
+            },
+            "GetReserves": {
+                "type": "object",
+                "properties": {
+                    "message": {
+                        "type": "string"
+                    },
+                    "status": {
+                        "type": "number"
+                    },
+                    "reserves": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Reserve"
+                        }
+                    },
+                    "total": {
+                        "type": "number"
+                    },
+                    "limit": {
+                        "type": "number"
+                    },
+                    "offset": {
+                        "type": "number"
+                    },
+                    "nextUrl": {
+                        "type": "string"
+                    },
+                    "previousUrl": {
+                        "type": "string"
+                    }
+                }
+            },
+            "ResponseCar": {
+                "type": "object",
+                "properties": {
+                    "message": {
+                        "type": "string"
+                    },
+                    "status": {
+                        "type": "number"
+                    },
+                    "body": {
+                        "properties": {
+                            "car": {
+                                "$ref": "#/components/schemas/Car"
+                            }
+                        }
+                    }
+                }
+            },
+            "ResponseUser": {
+                "type": "object",
+                "properties": {
+                    "message": {
+                        "type": "string"
+                    },
+                    "status": {
+                        "type": "number"
+                    },
+                    "body": {
+                        "properties": {
+                            "car": {
+                                "$ref": "#/components/schemas/User"
+                            }
+                        }
+                    }
+                }
+            },
+            "ResponseReserve": {
+                "type": "object",
+                "properties": {
+                    "message": {
+                        "type": "string"
+                    },
+                    "status": {
+                        "type": "number"
+                    },
+                    "body": {
+                        "properties": {
+                            "reserve": {
+                                "$ref": "#/components/schemas/Reserve"
+                            }
+                        }
+                    }
+                }
+            },
+            "ResponseEmpty": {
+                "type": "object",
+                "properties": {
+                    "message": {
+                        "type": "string"
+                    },
+                    "status": {
+                        "type": "number"
+                    }
+                }
+            },
+            "ResponseLogin": {
+                "type": "object",
+                "properties": {
+                    "message": {
+                        "type": "string"
+                    },
+                    "status": {
+                        "type": "number"
+                    },
+                    "token": {
+                        "type": "string"
+                    }
+                }
+            }
+        }
+    }
+}
