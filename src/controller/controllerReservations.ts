@@ -189,11 +189,11 @@ const deleteReserve = async (req: Request, res: Response) => {
 
       if (deletedReserve == null) {
         return res.status(404).json({
-          message: 'Error, no booking was found with that ID',
+          message: 'Error, no reservation was found with that ID',
           status: res.status,
         });
       } else {
-        return res.status(400).json({});
+        return res.status(204).json({});
       }
     } catch (err) {
       return res.status(400).json({
@@ -216,10 +216,15 @@ const updateReserve = async (req: Request, res: Response) => {
     // Checks if we have an ID parameter being passed by the URL
     if (!isValidObjectId(req.params.id)) {
       return res.status(400).json({
-        message: 'Invalid ID, try again with a valid ID',
+        message: 'Invalid ID of reservation, try again with a valid ID',
       });
     } else {
-      const car = await Car.findById(req.params.id);
+      if (!isValidObjectId(req.body.id_car)) {
+        return res.status(400).json({
+          message: 'Invalid ID of a car, try again with a valid ID',
+        });
+      }
+      const car = await Car.findById(req.body.id_car);
       if (car == null) {
         return res.status(400).json({
           message: 'Error, no reservation found for this car ID',
@@ -265,9 +270,11 @@ const updateReserve = async (req: Request, res: Response) => {
                   status: res.status,
                 });
               } else {
+                const updated = await Reserve.findById(req.params.id);
                 return res.status(201).json({
                   message: 'Updated reservation',
                   status: res.status,
+                  updatedReserve: updated,
                 });
               }
             }
