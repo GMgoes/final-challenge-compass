@@ -156,7 +156,7 @@ const getReserve = async (req: Request, res: Response) => {
 
       if (reserve == null) {
         return res.status(400).json({
-          message: 'Error, no car found with that ID',
+          message: 'Error, no reservation found with that ID',
           status: res.status,
         });
       } else {
