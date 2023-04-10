@@ -76,7 +76,9 @@ const getReserves = async (req: Request, res: Response) => {
     if (req.query.offset) {
       offset = +req.query.offset;
     }
-    const reserves = await Reserve.find(search).skip(offset).limit(limit);
+    const reserves = await Reserve.find(search, '-__v')
+      .skip(offset)
+      .limit(limit);
     const currentUrl = req.baseUrl;
     const total = await Reserve.countDocuments({});
 

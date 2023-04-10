@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import User from '../models/User';
-import { obtainCEP, verifyCPF, verifyDate } from '../utils/utils';
+import { obtainCEP, verifyCPF, verifyDate, verifyEmail } from '../utils/utils';
 import bcrypt from 'bcrypt';
 import { createSendToken } from './authController';
 
@@ -14,6 +14,7 @@ const createUser = async (req: Request, res: Response) => {
     const flagAge = verifyDate(req.body.birth) >= 18;
     const flagCEP = Object.keys(fullCEP).length != 1;
     const flagCPF = verifyCPF(req.body.cpf);
+    const flagEmail = verifyEmail(req.body.email);
 
     // Estrutura esperada do objeto respondido pelo AXIOS (Se a consulta tiver sucesso)
     const expectedResponse = {
@@ -30,7 +31,7 @@ const createUser = async (req: Request, res: Response) => {
     };
 
     // Se os três critérios foram validados, podemos tentar criar um usuário
-    if (flagAge && flagCEP && flagCPF) {
+    if (flagAge && flagCEP && flagCPF && flagEmail) {
       try {
         const criptoPassword = await bcrypt.hash(req.body.password, 14);
         const createdUser = await User.create({
