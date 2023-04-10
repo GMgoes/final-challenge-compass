@@ -16,9 +16,12 @@ app.use('/api/v1', routerUser);
 app.use('/api/v1', routerReservation);
 app.use('/api/v1/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
-// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-app.listen(parseInt(process.env.PORT!), () => {
-  mongoose.connect(
+const port = process.env.PORT || 3000;
+
+mongoose
+  .connect(
     `mongodb+srv://${process.env.USERNAME_DB}:${process.env.PASSWORD_DB}@final-challenge.c2do336.mongodb.net/?retryWrites=true&w=majority`
-  );
-});
+  )
+  .then(() => {
+    app.listen(port);
+  });
