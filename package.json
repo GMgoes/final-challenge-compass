@@ -2,9 +2,9 @@
   "name": "challenge",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
-    "start": "npm install && node dist/index.js",
+    "start": "npm install && tsc && node dist/app.js",
     "test:dev": "jest dist/tests"
   },
   "author": "",
