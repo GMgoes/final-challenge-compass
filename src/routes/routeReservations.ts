@@ -12,13 +12,13 @@ const routerReservation = express.Router();
 
 routerReservation
   .route('/reserve')
-  .post(protect, createReserve) // Rota para cadastrar uma reserva com os dados do body
-  .get(getReserves); // Rota para listar todas as reservas, possível filtrar também por query
+  .post(protect, createReserve) // OK
+  .get(getReserves); // OK
 
 routerReservation
   .route('/reserve/:id')
-  .get(getReserve) // Rota para listar reservas por ID
-  .delete(protect, deleteReserve) // Rota para deletar uma reserva através de um ID
-  .put(protect, updateReserve); // Rota para atualizar uma reserva através de um ID
+  .get(getReserve) // OK
+  .delete(protect, deleteReserve) // OK
+  .put(protect, updateReserve); // OK
 
 export default routerReservation;

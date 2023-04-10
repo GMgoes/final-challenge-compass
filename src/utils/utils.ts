@@ -3,8 +3,8 @@ import axios from 'axios';
 import mongoose from 'mongoose';
 import moment from 'moment';
 import jwt from 'jsonwebtoken';
-/* Função para verificar a idade da pessoa,
-retorna a diferença de idade da data de nascimento até agora - TODO: Necessary Validated in JEST (new Date()) - How validate this? */
+/* Function to check the age of the person,
+returns the age difference from date of birth until now */
 const verifyDate = function (datePassed: string) {
   const dateToVerify = Date.parse(datePassed);
 
@@ -15,15 +15,15 @@ const verifyDate = function (datePassed: string) {
 
   return diferenceYears;
 };
-/* Função para obter as informações de regiões segundo o CEP informado,
- retorna o objeto repassado pelo ViaCEP - Validated in JEST */
+/* Function to obtain information about regions according to the zip code entered,
+ returns the object passed by ViaCEP */
 const obtainCEP = async function (urlCEP: string) {
   const responseObject = await axios.get(urlCEP).then((response) => {
     return response.data;
   });
   return responseObject;
 };
-// Função para verificar se um CPF é válido, retorna true ou false - Validated in JEST
+// Function to check if a CPF is valid, returns true or false
 const verifyCPF = function (cpfToVerify: string) {
   if (
     formatCPF(cpfToVerify)[9] == verifyDigit(10, cpfToVerify) &&
@@ -35,7 +35,7 @@ const verifyCPF = function (cpfToVerify: string) {
     return false;
   }
 };
-// Função que retorna o CPF formatado (Sem pontos e virgulas até o momento) - Validated in JEST
+// Function that returns the formatted CPF (Without semicolons so far)
 function formatCPF(cpf: string) {
   let format = cpf.replaceAll('-', ' ');
   format = format.replaceAll('.', ' ');
@@ -47,7 +47,7 @@ function formatCPF(cpf: string) {
   }
   return vectorCPF;
 }
-// Função que verifica dinamicamente os digitos calculaveis do CPF (10° e 11° dígito), retorna true ou false - Validated in JEST
+// Function that dynamically checks the CPF's calculable digits (10th and 11th digit), returns true or false
 function verifyDigit(weight: number, cpfToVerify: string) {
   const vector = formatCPF(cpfToVerify);
   const length = weight - 1;
@@ -67,7 +67,7 @@ function verifyDigit(weight: number, cpfToVerify: string) {
   }
   return digit;
 }
-// Função que valida se um ID repassado (String) é um ObjectID segundo as definições do MongoDB - Validated in JEST
+// Function that validates if a passed ID (String) is an ObjectID according to MongoDB definitions
 function isValidObjectId(id: string) {
   const ObjectId = mongoose.Types.ObjectId;
   if (ObjectId.isValid(id)) {
@@ -76,13 +76,13 @@ function isValidObjectId(id: string) {
   }
   return false;
 }
-// Função que verifica o preço total da reserva, com base nos dias passados por parâmetro e o preço da diária - Validated in JEST
+// Function that checks the total price of the reservation, based on the days passed by parameter and the daily price
 function calculateTotal(
   dateFinal: string,
   dateStart: string,
   valueDay: number
 ) {
-  // TODO: Why this doesn't works?
+  // TODO: Check why it can't be done that way
   /* const startDate = Date.parse(dateStart);
   const endDate = Date.parse(dateFinal);
   const diferenceMs = endDate - startDate; 
@@ -97,15 +97,15 @@ function calculateTotal(
 
   return valueTotal;
 }
-// Função para criar um token, no payload vai o ID do usuário - Validated in JEST
+// Function to create a token, the user ID goes in the payload
 function signToken(id: string, email: string) {
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   return jwt.sign({ id, email }, process.env.SECRET!, {
-    // Válido por 12 horas
+    // Valid for 12 hours
     expiresIn: 43200,
   });
 }
-// Função que converte os elementos de um objeto para um array de String (Utilizado para validar se TEMOS acessórios repetidos na requisição)
+// Function that converts the elements of an object to a String array (Used to validate if we HAVE repeated accessories in the request)
 function verifyDuplicateAccessories(accessoriesArray: any) {
   const array: string[] = [];
   accessoriesArray.forEach((element: any) => {
@@ -113,11 +113,11 @@ function verifyDuplicateAccessories(accessoriesArray: any) {
   });
   return hasDuplicates(array);
 }
-// Função que valida se um array possuí duplicatas
+// Function that validates if an array has duplicates
 function hasDuplicates(array: any) {
   return new Set(array).size !== array.length;
 }
-// Função que retira o limit e offset (Se tiver) e retorna um objeto vazio ou com query (Se tiver)
+// Function that removes the limit and offset (if any) and returns an empty object or with a query (if any)
 function formatedQuery(reqQuery: any) {
   const newQuery: any = {};
   const array = Object.keys(reqQuery);
@@ -128,7 +128,7 @@ function formatedQuery(reqQuery: any) {
   });
   return newQuery;
 }
-// Função que verifica se o email informado é válido
+// Function that checks if the entered email is valid
 function verifyEmail(email: string) {
   return (
     email.split(' ').length == 1 &&
@@ -139,11 +139,10 @@ function verifyEmail(email: string) {
     email.lastIndexOf('.') < email.length
   );
 }
-// TODO: Pensar uma forma de unificar as funções: verifyAccessoryExists e verifyDuplicateAccessories realizam funções muito semelhantes
-// Função que valida se TEREMOS string's repetidas depois da inserção de um novo elemento
+// TODO: Check for a way to unify the functions: verify AccessoryExists and verify Duplicate Accessories perform very similar functions
+// Function that validates if WE HAVE repeated strings after inserting a new element
 function verifyAccessoryExists(accessories: any, newAcessory: string) {
   let flag = 0;
-  console.log(accessories);
   accessories.forEach((element: any) => {
     if (element['description'] == newAcessory) {
       flag++;

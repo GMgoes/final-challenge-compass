@@ -27,6 +27,7 @@ const schema = new Schema({
     type: String,
     required: [true, 'Password field is required'],
     trim: true,
+    select: false,
   },
   cep: {
     type: String,
@@ -57,12 +58,6 @@ const schema = new Schema({
     type: String,
   },
 });
-
-/* schema.pre('save', async (next) => {
-  const hash = await bcrypt.hash(this.password, 10);
-  this.password = hash;
-  next();
-}); */
 
 const User = mongoose.model('User', schema);
 export default User;
