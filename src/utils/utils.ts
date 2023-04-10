@@ -105,7 +105,7 @@ function signToken(id: string, email: string) {
     expiresIn: 43200,
   });
 }
-// Função que converte os elementos de um objeto para um array de String (Utilizado para validar se temos acessórios repetidos)
+// Função que converte os elementos de um objeto para um array de String (Utilizado para validar se TEMOS acessórios repetidos na requisição)
 function verifyDuplicateAccessories(accessoriesArray: any) {
   const array: string[] = [];
   accessoriesArray.forEach((element: any) => {
@@ -117,7 +117,7 @@ function verifyDuplicateAccessories(accessoriesArray: any) {
 function hasDuplicates(array: any) {
   return new Set(array).size !== array.length;
 }
-//Função que retira o limit e offset (Se tiver) e retorna um objeto vazio ou com query (Se tiver)
+// Função que retira o limit e offset (Se tiver) e retorna um objeto vazio ou com query (Se tiver)
 function formatedQuery(reqQuery: any) {
   const newQuery: any = {};
   const array = Object.keys(reqQuery);
@@ -128,7 +128,29 @@ function formatedQuery(reqQuery: any) {
   });
   return newQuery;
 }
-
+// Função que verifica se o email informado é válido
+function verifyEmail(email: string) {
+  return (
+    email.split(' ').length == 1 &&
+    email.indexOf('@') != -1 &&
+    email.indexOf('@') < email.length &&
+    email.indexOf('@') != 0 &&
+    email.lastIndexOf('.') > email.indexOf('@') &&
+    email.lastIndexOf('.') < email.length
+  );
+}
+// TODO: Pensar uma forma de unificar as funções: verifyAccessoryExists e verifyDuplicateAccessories realizam funções muito semelhantes
+// Função que valida se TEREMOS string's repetidas depois da inserção de um novo elemento
+function verifyAccessoryExists(accessories: any, newAcessory: string) {
+  let flag = 0;
+  console.log(accessories);
+  accessories.forEach((element: any) => {
+    if (element['description'] == newAcessory) {
+      flag++;
+    }
+  });
+  return flag > 0 ? true : false;
+}
 export {
   verifyDate,
   obtainCEP,
@@ -140,4 +162,6 @@ export {
   verifyDigit,
   verifyDuplicateAccessories,
   formatedQuery,
+  verifyEmail,
+  verifyAccessoryExists,
 };

@@ -3,6 +3,7 @@ import Car from '../models/Car';
 import {
   formatedQuery,
   isValidObjectId,
+  verifyAccessoryExists,
   verifyDuplicateAccessories,
 } from '../utils/utils';
 // OK
@@ -21,7 +22,7 @@ const getCars = async (req: Request, res: Response) => {
     if (req.query.offset) {
       offset = +req.query.offset;
     }
-    const cars = await Car.find(search).skip(offset).limit(limit);
+    const cars = await Car.find(search, '-__v').skip(offset).limit(limit);
     const currentUrl = req.baseUrl;
     const total = await Car.countDocuments({});
 
@@ -98,10 +99,16 @@ const createCar = async (req: Request, res: Response) => {
   }
 };
 
-// TODO: - JEST - OK - Verify "The same rules as for registering a car apply here"
+// OK
 const updateCar = async (req: Request, res: Response) => {
-  // Verifica se foi passado um ID válido
-  if (isValidObjectId(req.params.id)) {
+  if (
+    isValidObjectId(req.params.id) &&
+    Object.keys(req.body).length >= 6 &&
+    parseInt(req.body.year) >= 1950 &&
+    parseInt(req.body.year) <= 2023 &&
+    req.body.accessories.length > 0 &&
+    verifyDuplicateAccessories(req.body.accessories) == false
+  ) {
     try {
       const car = await Car.findOneAndUpdate(
         { _id: req.params.id },
@@ -114,6 +121,7 @@ const updateCar = async (req: Request, res: Response) => {
           number_of_passengers: req.body.number_of_passengers,
         }
       );
+      const carUpdated = await Car.findById(req.params.id);
       if (car == null) {
         return res.status(404).json({
           message: 'Erro, não foi encontrado nenhum carro com esse ID',
@@ -123,7 +131,7 @@ const updateCar = async (req: Request, res: Response) => {
         return res.status(200).json({
           message: 'Atualizado dados do carro',
           status: res.status,
-          car,
+          car: carUpdated,
         });
       }
     } catch (err) {
@@ -141,12 +149,12 @@ const updateCar = async (req: Request, res: Response) => {
   }
 };
 
-// TODO: - JEST - OK
+// OK
 const getCar = async (req: Request, res: Response) => {
   /// Verifica se foi passado um ID válido
   if (isValidObjectId(req.params.id)) {
     try {
-      const car = await Car.findById(req.params.id);
+      const car = await Car.findById(req.params.id, '-__v');
 
       if (car == null) {
         return res.status(400).json({
@@ -176,7 +184,7 @@ const getCar = async (req: Request, res: Response) => {
   }
 };
 
-// TODO: - JEST - OK
+// OK
 const deleteCar = async (req: Request, res: Response) => {
   // Verifica se temos um parametro ID sendo passado pela URL
   if (isValidObjectId(req.params.id)) {
@@ -206,4 +214,55 @@ const deleteCar = async (req: Request, res: Response) => {
   }
 };
 
-export { getCars, createCar, updateCar, getCar, deleteCar };
+const updateAccessories = async (req: Request, res: Response) => {
+  const url = req.originalUrl.split('/');
+  const id = url[4];
+  const accessoryId = parseInt(url[6]);
+  const newAcessory = req.body.description;
+
+  const car = await Car.findById({ _id: id });
+
+  if (car != null) {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const accessories = car!.accessories;
+    const operation = verifyAccessoryExists(accessories, newAcessory);
+
+    if (accessoryId < accessories.length - 1 || !accessoryId) {
+      if (!operation) {
+        accessories[accessoryId] = { description: newAcessory };
+      }
+      if (operation && accessories[accessoryId]['description'] == newAcessory) {
+        accessories.splice(accessoryId, 1);
+      }
+    } else {
+      if (!operation) {
+        accessories.push({ description: newAcessory });
+      } else {
+        return res.status(400).json({
+          message:
+            'Não é possível adicionar esse item de novo, ele já está na lista',
+          status: res.status,
+        });
+      }
+    }
+    await Car.findOneAndUpdate(
+      { _id: id },
+      {
+        accessories: accessories,
+      }
+    );
+    const updatedCar = await Car.findById({ _id: id });
+    return res.status(200).json({
+      message: 'Carro atualizado',
+      status: res.status,
+      car: updatedCar,
+    });
+  } else {
+    return res.status(404).json({
+      message: 'Nenhum carro encontrado com esse ID',
+      status: res.status,
+    });
+  }
+};
+
+export { getCars, createCar, updateCar, getCar, deleteCar, updateAccessories };
