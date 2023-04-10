@@ -7,10 +7,10 @@ import {
   calculateTotal,
   signToken,
 } from '../utils/utils';
-import axios from 'axios';
 import jwt from 'jsonwebtoken';
 import * as dotenv from 'dotenv';
 dotenv.config();
+import axios from 'axios';
 
 jest.mock('axios');
 // Valid CPF generated in 4devs - 395.512.200-05

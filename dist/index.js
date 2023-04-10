@@ -26,8 +26,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.app = void 0;
 const express_1 = __importDefault(require("express"));
-const mongoose_1 = __importDefault(require("mongoose"));
 const dotenv = __importStar(require("dotenv"));
 const routeCar_1 = __importDefault(require("./routes/routeCar"));
 const routeUser_1 = __importDefault(require("./routes/routeUser"));
@@ -35,15 +35,10 @@ const routeReservations_1 = __importDefault(require("./routes/routeReservations"
 const swagger_ui_express_1 = __importDefault(require("swagger-ui-express"));
 dotenv.config();
 const app = (0, express_1.default)();
+exports.app = app;
 const swaggerdocs_json_1 = __importDefault(require("./documentation/swaggerdocs.json"));
 app.use(express_1.default.json());
 app.use('/api/v1', routeCar_1.default);
 app.use('/api/v1', routeUser_1.default);
 app.use('/api/v1', routeReservations_1.default);
 app.use('/api/v1/api-docs', swagger_ui_express_1.default.serve, swagger_ui_express_1.default.setup(swaggerdocs_json_1.default));
-const port = process.env.PORT || 3000;
-mongoose_1.default
-    .connect(`mongodb+srv://${process.env.USERNAME_DB}:${process.env.PASSWORD_DB}@final-challenge.c2do336.mongodb.net/?retryWrites=true&w=majority`)
-    .then(() => {
-    app.listen(port);
-});
