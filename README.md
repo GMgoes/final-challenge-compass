@@ -66,23 +66,26 @@ Clone the project to a folder on your device or download a zipped copy and then 
 git clone https://github.com/GMgoes/final-challenge-compass.git
 ```
 
-**In the project folder**, open a terminal and run the following command to all necessary project dependencies.:
-
-```
-npm install
-```
-
-Then we compile our TypeScript files to JavaScript, the **tsconfig.json** is configured to compile everything that will be needed from the **/src** folder to the **/dist** folder, through the command:
-
-```
-npm run build
-```
-
-Next, this command will run our server with Node in the /dist directory, in the **index.js** file
+**In the project folder**, open a terminal and run the following command to install all necessary project dependencies, compile to JavaScript and start our server.
 
 ```
 npm run start
 ```
+
+Once the npm run start command installs the necessary dependencies to run our tests and also compiles the code to JavaScript, just type the command below now, which will start the tests
+
+```
+npm run test:dev
+```
+
+<br/>
+<br/>
+
+## 🚀 Deploy
+
+The deployment was done through the **Railway**, it's link to access the dashboard of deploy [is here](https://railway.app/invite/AaGW0M7mFxy)
+
+And to acess the API remotely it is through the URL: [challenge-one-compass-production.up.railway.app](challenge-one-compass-production.up.railway.app/api/v1/api-docs)
 
 <br/>
 <br/>
