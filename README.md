@@ -77,6 +77,12 @@ Once the npm run start command installs the necessary dependencies to run our te
 ```
 npm run test:dev
 ```
+<br/>
+<br/>
+
+## 🧪 Tests
+
+This API is not completed in terms of testing, only unit tests were implemented for the functions that are in the utils directory, it is necessary to complete the integrated tests of the endpoints and the entire flow of functions in the controller directory, the command npm run test:dev tests only these unit tests
 
 <br/>
 <br/>
@@ -92,7 +98,7 @@ And to acess the API remotely it is through the URL: [challenge-one-compass-prod
 
 ## ✔️ Server On
 
-Now using Postman we can access our endpoints, separating through the three divisions of our project, we have the endpoints of: **Cars**, **Users** and **Reservations**, some routes require authentication of a valid user, they are flagged with a 🔒, let's look at each one of them:
+After typing the command *npm run start*, using Postman or Insomnia we can access our endpoints, separating through the three divisions of our project, we have the endpoints of: **Cars**, **Users** and **Reservations**, some routes require authentication of a valid user, they are flagged with a 🔒, let's look at each one of them:
 
 - _Obs: Clicking on one of the lines below will direct you to the explanation of the selected route_
 
@@ -1274,3 +1280,18 @@ Response Body without valid data
     "message": "Invalid ID of a car, try again with a valid ID"
 }
 ```
+
+
+----
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+# Dedicatória
+
+Dedico esse projeto à minha mãe, **Vania**, que me apoiou muito durante esse período da construção do projeto, esse projeto demandou um certo nível de conhecimento e resiliência se comparado aos anteriores, por mais que tenha sido um projeto simples da área e semelhante aos que já tinham sido desenvolvidos, teve acréscimo de algumas coisas novas e principalmente a organização de modo solo, visto que no anterior fizemos em grupo, tive vários momentos em que estava para baixo e que achava que não conseguiria desenvolver tudo à tempo sozinho, porém a minha mãe e também meus amigos me apoiaram à não desistir e continuar focado, infelizmente não consegui entregar por completo (Ficou faltando testes integrados utilizando Mocks no Jest) porém gostei de ter feito esse desafio ao final, consigo ver que aprendi bastante coisa durante esse tempo no PB e espero ter novos desáfios em que possa olhar para trás e ver que continuei crescendo na área que gosto. 🚀❤️
