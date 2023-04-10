@@ -240,7 +240,7 @@ const updateAccessories = async (req: Request, res: Response) => {
 
     /* In case it is not a duplicate and the place the user wants to insert is an id greater than the size of the vector,
     then we take it and insert it at the end of the vector */
-    if (accessoryId < accessories.length - 1 || !accessoryId) {
+    if (accessoryId < accessories.length || !accessoryId) {
       // Check if it's a duplicate, and if not, then we update the location on the ID that the user entered and overwrite the object that was inside
       if (!operation) {
         accessories[accessoryId] = { description: newAcessory };

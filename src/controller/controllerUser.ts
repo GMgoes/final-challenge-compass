@@ -9,6 +9,11 @@ const createUser = async (req: Request, res: Response) => {
   // Check if we don't already have a user registered with that email
   if (!(await User.exists({ email: req.body.email }))) {
     // Base URL for ViaCEP query
+    if (req.body.cep.length != 8) {
+      return res.status(400).json({
+        message: 'Error, this CEP is invalid',
+      });
+    }
     const urlCEP = `http://viacep.com.br/ws/${req.body.cep}/json/`;
     // Obtain the Full CEP from ViaCEP
     const fullCEP = await obtainCEP(urlCEP);
@@ -54,6 +59,7 @@ const createUser = async (req: Request, res: Response) => {
           message: 'New registered user',
           // TODO: Verifiy how show all these attributes, hidding __v and password, and don't writing hard like this
           createdUser: {
+            id: createdUser.id,
             name: createdUser.name,
             cpf: createdUser.cpf,
             birth: createdUser.birth,
